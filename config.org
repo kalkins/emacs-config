@@ -1,0 +1,296 @@
+* Package management
+** Package.el
+
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+#+END_SRC
+
+Add extra package providers.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+#+END_SRC
+
+Initialize Package.el
+
+#+BEGIN_SRC emacs-lisp
+(package-initialize)
+#+END_SRC
+
+** Use-package
+
+Use-package allows for easier handling of packages, like setting settings and keybindings.
+
+Automatically download required packages.
+
+#+BEGIN_SRC emacs-lisp
+(setq use-package-always-ensure t)
+#+END_SRC
+
+* Org Mode
+
+Use pretty bullets instead of asterisks in headings.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :config
+  (add-hook 'org-mode-hook
+    (lambda () (org-bullets-mode t))))
+#+END_SRC
+
+Only use one indented bullet per heading.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-hide-leading-stars t)
+#+END_SRC
+
+Use proper syntax highlighting in these source blocks.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
+#+END_SRC
+
+Keybinding for editing src blocks.
+
+#+BEGIN_SRC emacs-lisp
+(define-key org-mode-map (kbd "C-c e") 'org-edit-src-code)
+#+END_SRC
+
+Disable org bindings that are used for other stuff.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key org-mode-map (kbd "C-j") nil)
+  (define-key org-mode-map (kbd "C-k") nil)
+#+END_SRC
+
+Org export extensions.
+
+#+BEGIN_SRC emacs-lisp
+  ;; Github markdown
+  (use-package ox-gfm)
+  ;; Twitter bootstrap
+  (use-package ox-twbs)
+  ;; Syntax highlighting in exported html
+  (use-package htmlize)
+#+END_SRC
+
+* Display
+** Toolbars and scollbar
+
+Hide the toolbar, menubar and scrollbar.
+
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+#+END_SRC
+
+** Powerline
+
+#+BEGIN_SRC emacs-lisp
+(use-package powerline
+  :config
+  (powerline-center-evil-theme))
+#+END_SRC
+
+* Search
+** Helm
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  :bind (("M-x" . helm-M-x)
+	 ("C-x r b" . helm-filtered-bookmarks)
+	 ("C-x C-f" . helm-find-files)
+	 ("C-f" . helm-find))
+  :config
+  (helm-mode 1))
+#+END_SRC
+
+* Git
+** Magit
+
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :bind ("M-m" . magit-status))
+#+END_SRC
+
+** Evil-magit
+
+This package allows some vim navigation bindings to
+be used in the magit buffer. It uses default vim bindings,
+so I have to remap them to use jklø.
+
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-magit
+    :init
+    (setq evil-magit-state 'normal)
+    (setq evil-magit-use-y-for-yank nil)
+    :config
+    (evil-define-key evil-magit-state magit-mode-map "j" 'magit-log-popup)
+    (evil-define-key evil-magit-state magit-mode-map "k" 'evil-next-visual-line)
+    (evil-define-key evil-magit-state magit-mode-map "l" 'evil-previous-visual-line))
+#+END_SRC
+
+* Evil mode
+
+This package adds vim-like navigation to emacs.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :config
+    (evil-mode 1)
+#+END_SRC
+
+I prefer to use jklø for navigation instead of hjkl.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key evil-motion-state-map (kbd "j") 'evil-backward-char)
+  (define-key evil-motion-state-map (kbd "k") 'evil-next-line)
+  (define-key evil-motion-state-map (kbd "l") 'evil-previous-line)
+  (define-key evil-motion-state-map (kbd "ø") 'evil-forward-char))
+#+END_SRC
+
+I like to insert black newlines with RET in normal mode.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key evil-normal-state-map (kbd "RET") (lambda ()
+						  (interactive)
+						  (next-line)
+						  (beginning-of-line)
+						  (newline)
+						  (previous-line)))
+#+END_SRC
+
+Disable some keys, so they can be used for other stuff later.
+
+#+BEGIN_SRC emacs-lisp
+(define-key evil-motion-state-map (kbd "C-f") nil)
+#+END_SRC
+
+* Projectile
+
+I use projectile for working on different projects.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :config
+    (projectile-mode))
+
+  (use-package helm-projectile)
+#+END_SRC
+
+* Line numbers
+
+I have line numbers off by default, but I want to
+be able to quickly turn them of and on. I often
+need relative numbers for evil mode commands.
+
+This setup toggles line numbers with 'h', and
+relative numbers with 'æ'. If I hit 'æ' while
+line numbers are toggled, it switched to
+relative numbers. If I hit 'æ' again it turns
+all line numbers off.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package linum-relative
+    :config
+    (setq linum-relative-mode nil)
+    (define-key evil-normal-state-map (kbd "h") (lambda ()
+						  (interactive)
+						  (if (and linum-mode (not linum-relative-mode))
+						      (linum-mode -1)
+						    (progn
+						      (linum-relative-off)
+						      (linum-mode 1)
+						      (setq linum-relative-mode nil)))))
+    (define-key evil-normal-state-map (kbd "æ") (lambda ()
+						  (interactive)
+						  (if (and linum-mode linum-relative-mode)
+						      (progn
+							(linum-relative-off)
+							(linum-mode -1)
+							(setq linum-relative-mode nil))
+						    (progn
+						      (linum-mode 1)
+						      (linum-relative-on)
+						      (setq linum-relative-mode t))))))
+#+END_SRC
+
+* Minor packages
+
+#+BEGIN_SRC emacs-lisp
+  (use-package bookmark+)
+
+  (use-package virtualenvwrapper)
+
+  (use-package yasnippet)
+
+  (use-package pony-mode)
+
+  (use-package doremi)
+
+  (use-package auto-complete
+    :config
+    (auto-complete-mode))
+#+END_SRC
+
+* Custom functions
+** Edit this config
+
+#+BEGIN_SRC emacs-lisp
+  ;; Get the filepath when the code is first executed.
+  ;; The code is moved to a .el file of the same name
+  ;; as this file when it is executed, so we must replace
+  ;; the file extension to gen the right file
+  (setq config-file-path (replace-regexp-in-string
+			  "\\.el$"
+			  ".org"
+			  (or load-file-name buffer-file-name)))
+
+  (defun edit-config ()
+    "Open this config file in a new buffer."
+    (interactive)
+    (find-file config-file-path))
+#+END_SRC
+
+** Create org src block and open in new buffer
+
+#+BEGIN_SRC emacs-lisp
+  (defun org-src-create-and-open (lang)
+    "Create a src block for the language the user types in, and open it in a new buffer."
+    (interactive
+      (list (read-string "Programming language (emacs-lisp): ")))
+    (when (equal lang "")
+      (setq lang "emacs-lisp"))
+    (insert (format "#+BEGIN_SRC %s\n\n#+END_SRC" lang))
+    (previous-line)
+    (org-edit-src-code))
+
+  (define-key org-mode-map (kbd "C-c b") 'org-src-create-and-open)
+#+END_SRC
+
+* Keybindings
+  
+Bindings that are spesific to a package are defined together
+with that package.
+Bindings spesific to states the different
+states for evil are defined under [[*Evil mode][Evil mode]].
+Bindings to custom functions in this file are
+defined together with those functions.
+
+** Move between windows
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-j") 'windmove-left)
+(global-set-key (kbd "C-k") 'windmove-down)
+(global-set-key (kbd "C-l") 'windmove-up)
+(global-set-key (kbd "C-ø") 'windmove-right)
+#+END_SRC
+
+** Cycle buffers
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x k") 'next-buffer)
+(global-set-key (kbd "C-x l") 'previous-buffer)
+#+END_SRC
+
