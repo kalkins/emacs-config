@@ -1,3 +1,13 @@
+#+TITLE: Emacs configuration
+#+AUTHOR: Sindre Stephansen
+#+EMAIL: sindre@sindrestephansen.com
+#+LANGUAGE: en
+#+LINK_HOME: http://sindrestephansen.com
+
+This is my configuration file for emacs (exported as twitter bootstrap html),
+the source of which can be found [[http://github.com/kalkins/emacs-config][here]]. The config is written using org mode,
+and all code blocks are executed at launch.
+
 * Package management
 ** Package.el
 
