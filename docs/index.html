@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title></title>
+<!-- 2017-05-18 to. 23:46 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style type="text/css">
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script>
+</head>
+<body>
+<div id="content" class="container">
+<div class="row"><div class="col-md-9"><h1 class="title"></h1>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Package management</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Package.el</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">require</span> '<span style="color: #e5786d;">package</span>)
+</pre>
+</div>
+
+<p>
+Add extra package providers.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(add-to-list 'package-archives '(<span style="color: #95e454;">"melpa"</span> . <span style="color: #95e454;">"http://melpa.org/packages/"</span>))
+</pre>
+</div>
+
+<p>
+Initialize Package.el
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(package-initialize)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Use-package</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Use-package allows for easier handling of packages, like setting settings and keybindings.
+</p>
+
+<p>
+Automatically download required packages.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">setq</span> use-package-always-ensure t)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Org Mode</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Use pretty bullets instead of asterisks in headings.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">org-bullets</span>
+  <span style="color: #e5786d;">:config</span>
+  (add-hook 'org-mode-hook
+    (<span style="color: #8ac6f2; font-weight: bold;">lambda</span> () (org-bullets-mode t))))
+</pre>
+</div>
+
+<p>
+Only use one indented bullet per heading.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">setq</span> org-hide-leading-stars t)
+</pre>
+</div>
+
+<p>
+Use proper syntax highlighting in these source blocks.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">setq</span> org-src-fontify-natively t)
+</pre>
+</div>
+
+<p>
+Keybinding for editing src blocks.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-key org-mode-map (kbd <span style="color: #95e454;">"C-c e"</span>) 'org-edit-src-code)
+</pre>
+</div>
+
+<p>
+Disable org bindings that are used for other stuff.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-key org-mode-map (kbd <span style="color: #95e454;">"C-j"</span>) nil)
+(define-key org-mode-map (kbd <span style="color: #95e454;">"C-k"</span>) nil)
+</pre>
+</div>
+
+<p>
+Org export extensions.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #99968b;">;; </span><span style="color: #99968b;">Github markdown</span>
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">ox-gfm</span>)
+<span style="color: #99968b;">;; </span><span style="color: #99968b;">Twitter bootstrap</span>
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">ox-twbs</span>)
+<span style="color: #99968b;">;; </span><span style="color: #99968b;">Syntax highlighting in exported html</span>
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">htmlize</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Display</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Toolbars and scollbar</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Hide the toolbar, menubar and scrollbar.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Powerline</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">powerline</span>
+  <span style="color: #e5786d;">:config</span>
+  (powerline-center-evil-theme))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Search</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Helm</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">helm</span>
+  <span style="color: #e5786d;">:bind</span> ((<span style="color: #95e454;">"M-x"</span> . helm-M-x)
+         (<span style="color: #95e454;">"C-x r b"</span> . helm-filtered-bookmarks)
+         (<span style="color: #95e454;">"C-x C-f"</span> . helm-find-files)
+         (<span style="color: #95e454;">"C-f"</span> . helm-find))
+  <span style="color: #e5786d;">:config</span>
+  (helm-mode 1))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Git</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Magit</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">magit</span>
+  <span style="color: #e5786d;">:bind</span> (<span style="color: #95e454;">"M-m"</span> . magit-status))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> Evil-magit</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+This package allows some vim navigation bindings to
+be used in the magit buffer. It uses default vim bindings,
+so I have to remap them to use jklø.
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">evil-magit</span>
+  <span style="color: #e5786d;">:init</span>
+  (<span style="color: #8ac6f2; font-weight: bold;">setq</span> evil-magit-state 'normal)
+  (<span style="color: #8ac6f2; font-weight: bold;">setq</span> evil-magit-use-y-for-yank nil)
+  <span style="color: #e5786d;">:config</span>
+  (<span style="color: #8ac6f2; font-weight: bold;">evil-define-key</span> evil-magit-state magit-mode-map <span style="color: #95e454;">"j"</span> 'magit-log-popup)
+  (<span style="color: #8ac6f2; font-weight: bold;">evil-define-key</span> evil-magit-state magit-mode-map <span style="color: #95e454;">"k"</span> 'evil-next-visual-line)
+  (<span style="color: #8ac6f2; font-weight: bold;">evil-define-key</span> evil-magit-state magit-mode-map <span style="color: #95e454;">"l"</span> 'evil-previous-visual-line))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Evil mode</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+This package adds vim-like navigation to emacs.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">evil</span>
+  <span style="color: #e5786d;">:config</span>
+  (evil-mode 1)
+</pre>
+</div>
+
+<p>
+I prefer to use jklø for navigation instead of hjkl.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-key evil-motion-state-map (kbd <span style="color: #95e454;">"j"</span>) 'evil-backward-char)
+(define-key evil-motion-state-map (kbd <span style="color: #95e454;">"k"</span>) 'evil-next-line)
+(define-key evil-motion-state-map (kbd <span style="color: #95e454;">"l"</span>) 'evil-previous-line)
+(define-key evil-motion-state-map (kbd <span style="color: #95e454;">"&#248;"</span>) 'evil-forward-char))
+</pre>
+</div>
+
+<p>
+I like to insert black newlines with RET in normal mode.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-key evil-normal-state-map (kbd <span style="color: #95e454;">"RET"</span>) (<span style="color: #8ac6f2; font-weight: bold;">lambda</span> ()
+                                                (<span style="color: #8ac6f2; font-weight: bold;">interactive</span>)
+                                                (next-line)
+                                                (beginning-of-line)
+                                                (newline)
+                                                (previous-line)))
+</pre>
+</div>
+
+<p>
+Disable some keys, so they can be used for other stuff later.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-key evil-motion-state-map (kbd <span style="color: #95e454;">"C-f"</span>) nil)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Projectile</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+I use projectile for working on different projects.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">projectile</span>
+  <span style="color: #e5786d;">:config</span>
+  (projectile-mode))
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">helm-projectile</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Line numbers</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+I have line numbers off by default, but I want to
+be able to quickly turn them of and on. I often
+need relative numbers for evil mode commands.
+</p>
+
+<p>
+This setup toggles line numbers with 'h', and
+relative numbers with 'æ'. If I hit 'æ' while
+line numbers are toggled, it switched to
+relative numbers. If I hit 'æ' again it turns
+all line numbers off.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">linum-relative</span>
+  <span style="color: #e5786d;">:config</span>
+  (<span style="color: #8ac6f2; font-weight: bold;">setq</span> linum-relative-mode nil)
+  (define-key evil-normal-state-map (kbd <span style="color: #95e454;">"h"</span>) (<span style="color: #8ac6f2; font-weight: bold;">lambda</span> ()
+                                                (<span style="color: #8ac6f2; font-weight: bold;">interactive</span>)
+                                                (<span style="color: #8ac6f2; font-weight: bold;">if</span> (<span style="color: #8ac6f2; font-weight: bold;">and</span> linum-mode (not linum-relative-mode))
+                                                    (linum-mode -1)
+                                                  (<span style="color: #8ac6f2; font-weight: bold;">progn</span>
+                                                    (linum-relative-off)
+                                                    (linum-mode 1)
+                                                    (<span style="color: #8ac6f2; font-weight: bold;">setq</span> linum-relative-mode nil)))))
+  (define-key evil-normal-state-map (kbd <span style="color: #95e454;">"&#230;"</span>) (<span style="color: #8ac6f2; font-weight: bold;">lambda</span> ()
+                                                (<span style="color: #8ac6f2; font-weight: bold;">interactive</span>)
+                                                (<span style="color: #8ac6f2; font-weight: bold;">if</span> (<span style="color: #8ac6f2; font-weight: bold;">and</span> linum-mode linum-relative-mode)
+                                                    (<span style="color: #8ac6f2; font-weight: bold;">progn</span>
+                                                      (linum-relative-off)
+                                                      (linum-mode -1)
+                                                      (<span style="color: #8ac6f2; font-weight: bold;">setq</span> linum-relative-mode nil))
+                                                  (<span style="color: #8ac6f2; font-weight: bold;">progn</span>
+                                                    (linum-mode 1)
+                                                    (linum-relative-on)
+                                                    (<span style="color: #8ac6f2; font-weight: bold;">setq</span> linum-relative-mode t))))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> Minor packages</h2>
+<div class="outline-text-2" id="text-9">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">bookmark+</span>)
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">virtualenvwrapper</span>)
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">yasnippet</span>)
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">pony-mode</span>)
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">doremi</span>)
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">auto-complete</span>
+  <span style="color: #e5786d;">:config</span>
+  (auto-complete-mode))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> Custom functions</h2>
+<div class="outline-text-2" id="text-10">
+</div><div id="outline-container-sec-10-1" class="outline-3">
+<h3 id="sec-10-1"><span class="section-number-3">10.1</span> Edit this config</h3>
+<div class="outline-text-3" id="text-10-1">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #99968b;">;; </span><span style="color: #99968b;">Get the filepath when the code is first executed.</span>
+<span style="color: #99968b;">;; </span><span style="color: #99968b;">The code is moved to a .el file of the same name</span>
+<span style="color: #99968b;">;; </span><span style="color: #99968b;">as this file when it is executed, so we must replace</span>
+<span style="color: #99968b;">;; </span><span style="color: #99968b;">the file extension to gen the right file</span>
+(<span style="color: #8ac6f2; font-weight: bold;">setq</span> config-file-path (replace-regexp-in-string
+                        <span style="color: #95e454;">"\\.el$"</span>
+                        <span style="color: #95e454;">".org"</span>
+                        (<span style="color: #8ac6f2; font-weight: bold;">or</span> load-file-name buffer-file-name)))
+
+(<span style="color: #8ac6f2; font-weight: bold;">defun</span> <span style="color: #cae682;">edit-config</span> ()
+  <span style="color: #95e454;">"Open this config file in a new buffer."</span>
+  (<span style="color: #8ac6f2; font-weight: bold;">interactive</span>)
+  (find-file config-file-path))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-10-2" class="outline-3">
+<h3 id="sec-10-2"><span class="section-number-3">10.2</span> Create org src block and open in new buffer</h3>
+<div class="outline-text-3" id="text-10-2">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">defun</span> <span style="color: #cae682;">org-src-create-and-open</span> (lang)
+  <span style="color: #95e454;">"Create a src block for the language the user types in, and open it in a new buffer."</span>
+  (<span style="color: #8ac6f2; font-weight: bold;">interactive</span>
+    (list (read-string <span style="color: #95e454;">"Programming language (emacs-lisp): "</span>)))
+  (<span style="color: #8ac6f2; font-weight: bold;">when</span> (equal lang <span style="color: #95e454;">""</span>)
+    (<span style="color: #8ac6f2; font-weight: bold;">setq</span> lang <span style="color: #95e454;">"emacs-lisp"</span>))
+  (insert (format <span style="color: #95e454;">"#+BEGIN_SRC %s\n\n#+END_SRC"</span> lang))
+  (previous-line)
+  (org-edit-src-code))
+
+(define-key org-mode-map (kbd <span style="color: #95e454;">"C-c b"</span>) 'org-src-create-and-open)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> Keybindings</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+Bindings that are spesific to a package are defined together
+with that package.
+Bindings spesific to states the different
+states for evil are defined under <a href="#sec-6">Evil mode</a>.
+Bindings to custom functions in this file are
+defined together with those functions.
+</p>
+</div>
+
+<div id="outline-container-sec-11-1" class="outline-3">
+<h3 id="sec-11-1"><span class="section-number-3">11.1</span> Move between windows</h3>
+<div class="outline-text-3" id="text-11-1">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #95e454;">"C-j"</span>) 'windmove-left)
+(global-set-key (kbd <span style="color: #95e454;">"C-k"</span>) 'windmove-down)
+(global-set-key (kbd <span style="color: #95e454;">"C-l"</span>) 'windmove-up)
+(global-set-key (kbd <span style="color: #95e454;">"C-&#248;"</span>) 'windmove-right)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-11-2" class="outline-3">
+<h3 id="sec-11-2"><span class="section-number-3">11.2</span> Cycle buffers</h3>
+<div class="outline-text-3" id="text-11-2">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #95e454;">"C-x k"</span>) 'next-buffer)
+(global-set-key (kbd <span style="color: #95e454;">"C-x l"</span>) 'previous-buffer)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="col-md-3"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#sec-1">1. Package management</a>
+<ul class="nav">
+<li><a href="#sec-1-1">1.1. Package.el</a></li>
+<li><a href="#sec-1-2">1.2. Use-package</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Org Mode</a></li>
+<li><a href="#sec-3">3. Display</a>
+<ul class="nav">
+<li><a href="#sec-3-1">3.1. Toolbars and scollbar</a></li>
+<li><a href="#sec-3-2">3.2. Powerline</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. Search</a>
+<ul class="nav">
+<li><a href="#sec-4-1">4.1. Helm</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5. Git</a>
+<ul class="nav">
+<li><a href="#sec-5-1">5.1. Magit</a></li>
+<li><a href="#sec-5-2">5.2. Evil-magit</a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6. Evil mode</a></li>
+<li><a href="#sec-7">7. Projectile</a></li>
+<li><a href="#sec-8">8. Line numbers</a></li>
+<li><a href="#sec-9">9. Minor packages</a></li>
+<li><a href="#sec-10">10. Custom functions</a>
+<ul class="nav">
+<li><a href="#sec-10-1">10.1. Edit this config</a></li>
+<li><a href="#sec-10-2">10.2. Create org src block and open in new buffer</a></li>
+</ul>
+</li>
+<li><a href="#sec-11">11. Keybindings</a>
+<ul class="nav">
+<li><a href="#sec-11-1">11.1. Move between windows</a></li>
+<li><a href="#sec-11-2">11.2. Cycle buffers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="date">Created: 2017-05-18 to. 23:46</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.1 (<a href="http://orgmode.org">Org-mode</a> 9.0.6)</p>
+</div>
+</footer>
+</body>
+</html>
