@@ -9,12 +9,19 @@
 ;; by the config
 (package-install "use-package")
 
-(let (config-path)
+(let (config-dir config-path)
   ;; Get the path to the config file which is in
   ;; the same folder as this script
-  (setq config-path (concat
-		     (file-name-buffer
-		      (or load-file-name buffer-file-name))
+  (setq config-dir (file-name-directory
+		    (or load-file-name buffer-file-name)))
+
+  ;; Ask the user if they want to use the default
+  ;; config, or provide the path to another one
+  (setq config-path (read-file-name
+		     "Path to config file: "
+		     config-dir
+		     nil
+		     t
 		     "config.org"))
 
   ;; Append a line to .emacs which loads the
