@@ -1,4 +1,10 @@
-* My emacs config
+#+TITLE: My Emacs config
+#+AUTHOR: Sindre Stephansen
+#+EMAIL: sindre@sindrestephansen.com
+#+LANGUAGE: en
+#+OPTIONS: toc:nil
+
+* My Emacs config
 
 This repo contains my configuration files for emacs.
 It is written in org mode using code blocks that get
