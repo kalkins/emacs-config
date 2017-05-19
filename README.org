@@ -1,7 +1,3 @@
-#+TITLE: My Emacs config
-#+AUTHOR: Sindre Stephansen
-#+EMAIL: sindre@sindrestephansen.com
-#+LANGUAGE: en
 #+OPTIONS: toc:nil
 
 * My Emacs config
