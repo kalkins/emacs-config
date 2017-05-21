@@ -187,7 +187,9 @@ I use projectile for working on different projects.
     :config
     (projectile-mode))
 
-  (use-package helm-projectile)
+  (use-package helm-projectile
+    :config
+    (helm-projectile-on))
 #+END_SRC
 
 * Line numbers
@@ -232,7 +234,10 @@ all line numbers off.
 #+BEGIN_SRC emacs-lisp
   (use-package bookmark+)
 
-  (use-package virtualenvwrapper)
+  (use-package virtualenvwrapper
+    :config
+    (venv-initialize-interactive-shells)
+    (setq venv-location "~/env/"))
 
   (use-package yasnippet)
 
@@ -243,6 +248,7 @@ all line numbers off.
   (use-package auto-complete
     :config
     (auto-complete-mode))
+
 #+END_SRC
 
 * Custom functions
