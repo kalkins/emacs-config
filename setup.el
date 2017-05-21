@@ -6,8 +6,11 @@
 ;;;; packages get loaded properly.
 
 ;; Install use-package, as it's not explictly installed
-;; by the config
-(package-install "use-package")
+;; by the config, unless it has been installed already
+(when (not (require 'use-package nil t))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (package-initialize)
+  (package-install "use-package"))
 
 (let (config-dir config-path)
   ;; Get the path to the config file which is in
