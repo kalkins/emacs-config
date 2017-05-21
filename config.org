@@ -149,7 +149,7 @@ This package adds vim-like navigation to emacs.
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :config
-    (evil-mode 1)
+    (evil-mode 1))
 #+END_SRC
 
 I prefer to use jklø for navigation instead of hjkl.
@@ -158,7 +158,7 @@ I prefer to use jklø for navigation instead of hjkl.
   (define-key evil-motion-state-map (kbd "j") 'evil-backward-char)
   (define-key evil-motion-state-map (kbd "k") 'evil-next-line)
   (define-key evil-motion-state-map (kbd "l") 'evil-previous-line)
-  (define-key evil-motion-state-map (kbd "ø") 'evil-forward-char))
+  (define-key evil-motion-state-map (kbd "ø") 'evil-forward-char)
 #+END_SRC
 
 I like to insert black newlines with RET in normal mode.
