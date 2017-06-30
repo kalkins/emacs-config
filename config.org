@@ -248,7 +248,7 @@ all line numbers off.
 
   (use-package auto-complete
     :config
-    (auto-complete-mode))
+    (global-auto-complete-mode))
 
 #+END_SRC
 
