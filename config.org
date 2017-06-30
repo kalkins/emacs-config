@@ -264,6 +264,13 @@ all line numbers off.
     (show-smartparens-global-mode))
 #+END_SRC
 
+* Custom packages
+
+#+BEGIN_SRC emacs-lisp
+  (load-file "/home/sindre/workspace/emacs/packages/django-menu-mode/django-menu-mode.el")
+  (global-set-key (kbd "M-d") 'hydra-django-menu/body)
+#+END_SRC
+
 * Custom functions
 ** Edit this config
 
