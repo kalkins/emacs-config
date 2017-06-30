@@ -250,6 +250,18 @@ all line numbers off.
     :config
     (global-auto-complete-mode))
 
+  (use-package flycheck
+    :config
+    (global-flycheck-mode))
+
+  (use-package smartparens
+    :demand
+    :bind (("M-j" . sp-backward-slurp-sexp)
+	   ("M-ø" . sp-forward-slurp-sexp))
+    :config
+    (require 'smartparens-config)
+    (smartparens-global-mode)
+    (show-smartparens-global-mode))
 #+END_SRC
 
 * Custom functions
