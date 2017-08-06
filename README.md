@@ -11,16 +11,10 @@ A setup script, setup.el, is included in the repo. This installs use-package, ap
 
 Only run the setup once, or you'll get duplicate lines in .emacs, which will make the launch process unnecessarily long.
 
-The command to run the setup from withing emacs is
-
-```emacs-lisp
-M-x load-file RET /path-to-repo/setup.el
-```
-
-If you are unfamiliar with emacs command syntax, that means press Alt and x together, write load-file, hit return/enter, write the path to where you downloaded this repo, add "setup.el" to that, and hit enter/return.
-
-You can also execute it from the command line with
+To run the setup, execute the following command in a terminal:
 
 ```sh
-emacs -l /path-to-repo/setup.el
+emacs -ql /path-to-repo/setup.el
 ```
+
+This starts emacs without an initilization script, and then loads the setup script.
