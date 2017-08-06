@@ -241,8 +241,8 @@ all line numbers off.
 
   (use-package yasnippet)
 
-  (require 'django-html-mode)
-  (use-package django-mode)
+  ;(require 'django-html-mode)
+  ;(use-package django-mode)
 
   (use-package doremi)
 
