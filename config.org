@@ -264,11 +264,15 @@ all line numbers off.
     (show-smartparens-global-mode))
 #+END_SRC
 
-* Custom packages
+* Local packages
+
+As local packages will vary between computers, the loading is not comitted to git.
+Instead, it's loaded in another file that is ignored in git.
 
 #+BEGIN_SRC emacs-lisp
-  (load-file "/home/sindre/workspace/emacs/packages/django-menu-mode/django-menu-mode.el")
-  (global-set-key (kbd "M-d") 'hydra-django-menu/body)
+  (let ((local-packages (concat (file-name-directory (or load-file-name buffer-file-name)) "local_packages.el")))
+    (when (file-exists-p local-packages)
+      (load-file local-packages)))
 #+END_SRC
 
 * Custom functions
