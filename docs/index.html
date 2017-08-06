@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <title>Emacs configuration</title>
-<!-- 2017-05-19 fr. 00:26 -->
+<!-- 2017-08-06 sø. 17:17 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Org-mode">
@@ -434,7 +434,7 @@ This package adds vim-like navigation to emacs.
 
 <pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">evil</span>
   <span style="color: #e5786d;">:config</span>
-  (evil-mode 1)
+  (evil-mode 1))
 </pre>
 </div>
 
@@ -447,7 +447,7 @@ I prefer to use jklø for navigation instead of hjkl.
 <pre class="src src-emacs-lisp">(define-key evil-motion-state-map (kbd <span style="color: #95e454;">"j"</span>) 'evil-backward-char)
 (define-key evil-motion-state-map (kbd <span style="color: #95e454;">"k"</span>) 'evil-next-line)
 (define-key evil-motion-state-map (kbd <span style="color: #95e454;">"l"</span>) 'evil-previous-line)
-(define-key evil-motion-state-map (kbd <span style="color: #95e454;">"&#248;"</span>) 'evil-forward-char))
+(define-key evil-motion-state-map (kbd <span style="color: #95e454;">"&#248;"</span>) 'evil-forward-char)
 </pre>
 </div>
 
@@ -467,6 +467,17 @@ I like to insert black newlines with RET in normal mode.
 </div>
 
 <p>
+Don't remap undo buttons in visual mode.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-key evil-visual-state-map (kbd <span style="color: #95e454;">"u"</span>) 'undo-tree-undo)
+(define-key evil-visual-state-map (kbd <span style="color: #95e454;">"C-r"</span>) 'undo-tree-redo)
+</pre>
+</div>
+
+<p>
 Disable some keys, so they can be used for other stuff later.
 </p>
 
@@ -482,16 +493,23 @@ Disable some keys, so they can be used for other stuff later.
 <h2 id="sec-7"><span class="section-number-2">7</span> Projectile</h2>
 <div class="outline-text-2" id="text-7">
 <p>
-I use projectile for working on different projects.
+I use projectile for switching between and navigating projects
 </p>
 
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">projectile</span>
   <span style="color: #e5786d;">:config</span>
+  (<span style="color: #8ac6f2; font-weight: bold;">setq</span> projectile-globally-ignored-files
+        (append '(<span style="color: #95e454;">"~"</span>
+                  <span style="color: #95e454;">".swp"</span>
+                  <span style="color: #95e454;">".pyc"</span>)
+                projectile-globally-ignored-files))
   (projectile-mode))
 
-(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">helm-projectile</span>)
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">helm-projectile</span>
+  <span style="color: #e5786d;">:config</span>
+  (helm-projectile-on))
 </pre>
 </div>
 </div>
@@ -544,34 +562,114 @@ all line numbers off.
 </div>
 
 <div id="outline-container-sec-9" class="outline-2">
-<h2 id="sec-9"><span class="section-number-2">9</span> Minor packages</h2>
+<h2 id="sec-9"><span class="section-number-2">9</span> Autosaves and backups</h2>
 <div class="outline-text-2" id="text-9">
+<p>
+I prefer putting all autosaves and backups in one directory,
+so they don't clutter up my projects.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">bookmark+</span>)
-
-(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">virtualenvwrapper</span>)
-
-(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">yasnippet</span>)
-
-(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">pony-mode</span>)
-
-(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">doremi</span>)
-
-(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">auto-complete</span>
-  <span style="color: #e5786d;">:config</span>
-  (auto-complete-mode))
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">defconst</span> <span style="color: #cae682;">emacs-saves-dir</span> <span style="color: #95e454;">"~/tmp/emacs"</span>)
+(<span style="color: #8ac6f2; font-weight: bold;">setq</span> backup-directory-alist
+      `((<span style="color: #95e454;">".*"</span> . ,emacs-saves-dir)))
+(<span style="color: #8ac6f2; font-weight: bold;">setq</span> auto-save-file-name-transforms
+      `((<span style="color: #95e454;">".*"</span> ,emacs-saves-dir t)))
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-10" class="outline-2">
-<h2 id="sec-10"><span class="section-number-2">10</span> Custom functions</h2>
+<h2 id="sec-10"><span class="section-number-2">10</span> Web development</h2>
 <div class="outline-text-2" id="text-10">
 </div><div id="outline-container-sec-10-1" class="outline-3">
-<h3 id="sec-10-1"><span class="section-number-3">10.1</span> Edit this config</h3>
+<h3 id="sec-10-1"><span class="section-number-3">10.1</span> HTML</h3>
 <div class="outline-text-3" id="text-10-1">
+</div><div id="outline-container-sec-10-1-1" class="outline-4">
+<h4 id="sec-10-1-1"><span class="section-number-4">10.1.1</span> Indentation</h4>
+<div class="outline-text-4" id="text-10-1-1">
+<p>
+Set HTML indentation to 4 spaces by default.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(add-hook 'html-mode-hook
+          (<span style="color: #8ac6f2; font-weight: bold;">lambda</span> ()
+            (set (make-local-variable 'sgml-basic-offset) 4)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> Minor packages</h2>
+<div class="outline-text-2" id="text-11">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">bookmark+</span>)
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">virtualenvwrapper</span>
+  <span style="color: #e5786d;">:config</span>
+  (venv-initialize-interactive-shells)
+  (<span style="color: #8ac6f2; font-weight: bold;">setq</span> venv-location <span style="color: #95e454;">"~/env/"</span>))
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">yasnippet</span>)
+
+<span style="color: #99968b;">;</span><span style="color: #99968b;">(require 'django-html-mode)</span>
+<span style="color: #99968b;">;</span><span style="color: #99968b;">(use-package django-mode)</span>
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">doremi</span>)
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">auto-complete</span>
+  <span style="color: #e5786d;">:config</span>
+  (global-auto-complete-mode))
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">flycheck</span>
+  <span style="color: #e5786d;">:config</span>
+  (global-flycheck-mode))
+
+(<span style="color: #8ac6f2; font-weight: bold;">use-package</span> <span style="color: #e5786d;">smartparens</span>
+  <span style="color: #e5786d;">:demand</span>
+  <span style="color: #e5786d;">:bind</span> ((<span style="color: #95e454;">"M-j"</span> . sp-backward-slurp-sexp)
+         (<span style="color: #95e454;">"M-&#248;"</span> . sp-forward-slurp-sexp))
+  <span style="color: #e5786d;">:config</span>
+  (<span style="color: #8ac6f2; font-weight: bold;">require</span> '<span style="color: #e5786d;">smartparens-config</span>)
+  (smartparens-global-mode)
+  (show-smartparens-global-mode))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> Local packages</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+As local packages will vary between computers, the loading is not comitted to git.
+Instead, it's loaded in another file that is ignored in git.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">let</span> ((local-packages (concat (file-name-directory (<span style="color: #8ac6f2; font-weight: bold;">or</span> load-file-name buffer-file-name)) <span style="color: #95e454;">"local_packages.el"</span>)))
+  (<span style="color: #8ac6f2; font-weight: bold;">when</span> (file-exists-p local-packages)
+    (load-file local-packages)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> Custom functions</h2>
+<div class="outline-text-2" id="text-13">
+</div><div id="outline-container-sec-13-1" class="outline-3">
+<h3 id="sec-13-1"><span class="section-number-3">13.1</span> Edit this config</h3>
+<div class="outline-text-3" id="text-13-1">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span style="color: #99968b;">;; </span><span style="color: #99968b;">Get the filepath when the code is first executed.</span>
@@ -592,9 +690,9 @@ all line numbers off.
 </div>
 </div>
 
-<div id="outline-container-sec-10-2" class="outline-3">
-<h3 id="sec-10-2"><span class="section-number-3">10.2</span> Create org src block and open in new buffer</h3>
-<div class="outline-text-3" id="text-10-2">
+<div id="outline-container-sec-13-2" class="outline-3">
+<h3 id="sec-13-2"><span class="section-number-3">13.2</span> Create org src block and open in new buffer</h3>
+<div class="outline-text-3" id="text-13-2">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(<span style="color: #8ac6f2; font-weight: bold;">defun</span> <span style="color: #cae682;">org-src-create-and-open</span> (lang)
@@ -612,11 +710,41 @@ all line numbers off.
 </div>
 </div>
 </div>
+
+<div id="outline-container-sec-13-3" class="outline-3">
+<h3 id="sec-13-3"><span class="section-number-3">13.3</span> Ert tests</h3>
+<div class="outline-text-3" id="text-13-3">
+<p>
+Run tests from tests.el, or all tests in tests/, interactively.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">
+</pre>
+</div>
+</div>
+</div>
 </div>
 
-<div id="outline-container-sec-11" class="outline-2">
-<h2 id="sec-11"><span class="section-number-2">11</span> Keybindings</h2>
-<div class="outline-text-2" id="text-11">
+<div id="outline-container-sec-14" class="outline-2">
+<h2 id="sec-14"><span class="section-number-2">14</span> Hooks</h2>
+<div class="outline-text-2" id="text-14">
+</div><div id="outline-container-sec-14-1" class="outline-3">
+<h3 id="sec-14-1"><span class="section-number-3">14.1</span> Delete trailing whitespace when saving</h3>
+<div class="outline-text-3" id="text-14-1">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(add-hook 'before-save-hook 'delete-trailing-whitespace)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-15" class="outline-2">
+<h2 id="sec-15"><span class="section-number-2">15</span> Keybindings</h2>
+<div class="outline-text-2" id="text-15">
 <p>
 Bindings that are spesific to a package are defined together
 with that package.
@@ -627,9 +755,9 @@ defined together with those functions.
 </p>
 </div>
 
-<div id="outline-container-sec-11-1" class="outline-3">
-<h3 id="sec-11-1"><span class="section-number-3">11.1</span> Move between windows</h3>
-<div class="outline-text-3" id="text-11-1">
+<div id="outline-container-sec-15-1" class="outline-3">
+<h3 id="sec-15-1"><span class="section-number-3">15.1</span> Move between windows</h3>
+<div class="outline-text-3" id="text-15-1">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #95e454;">"C-j"</span>) 'windmove-left)
@@ -641,9 +769,9 @@ defined together with those functions.
 </div>
 </div>
 
-<div id="outline-container-sec-11-2" class="outline-3">
-<h3 id="sec-11-2"><span class="section-number-3">11.2</span> Cycle buffers</h3>
-<div class="outline-text-3" id="text-11-2">
+<div id="outline-container-sec-15-2" class="outline-3">
+<h3 id="sec-15-2"><span class="section-number-3">15.2</span> Cycle buffers</h3>
+<div class="outline-text-3" id="text-15-2">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #95e454;">"C-x k"</span>) 'next-buffer)
@@ -683,17 +811,30 @@ defined together with those functions.
 <li><a href="#sec-6">6. Evil mode</a></li>
 <li><a href="#sec-7">7. Projectile</a></li>
 <li><a href="#sec-8">8. Line numbers</a></li>
-<li><a href="#sec-9">9. Minor packages</a></li>
-<li><a href="#sec-10">10. Custom functions</a>
+<li><a href="#sec-9">9. Autosaves and backups</a></li>
+<li><a href="#sec-10">10. Web development</a>
 <ul class="nav">
-<li><a href="#sec-10-1">10.1. Edit this config</a></li>
-<li><a href="#sec-10-2">10.2. Create org src block and open in new buffer</a></li>
+<li><a href="#sec-10-1">10.1. HTML</a></li>
 </ul>
 </li>
-<li><a href="#sec-11">11. Keybindings</a>
+<li><a href="#sec-11">11. Minor packages</a></li>
+<li><a href="#sec-12">12. Local packages</a></li>
+<li><a href="#sec-13">13. Custom functions</a>
 <ul class="nav">
-<li><a href="#sec-11-1">11.1. Move between windows</a></li>
-<li><a href="#sec-11-2">11.2. Cycle buffers</a></li>
+<li><a href="#sec-13-1">13.1. Edit this config</a></li>
+<li><a href="#sec-13-2">13.2. Create org src block and open in new buffer</a></li>
+<li><a href="#sec-13-3">13.3. Ert tests</a></li>
+</ul>
+</li>
+<li><a href="#sec-14">14. Hooks</a>
+<ul class="nav">
+<li><a href="#sec-14-1">14.1. Delete trailing whitespace when saving</a></li>
+</ul>
+</li>
+<li><a href="#sec-15">15. Keybindings</a>
+<ul class="nav">
+<li><a href="#sec-15-1">15.1. Move between windows</a></li>
+<li><a href="#sec-15-2">15.2. Cycle buffers</a></li>
 </ul>
 </li>
 </ul>
@@ -702,7 +843,7 @@ defined together with those functions.
 </div></div></div>
 <footer id="postamble" class="">
 <div><p class="author">Author: Sindre Stephansen</p>
-<p class="date">Created: 2017-05-19 fr. 00:26</p>
+<p class="date">Created: 2017-08-06 sø. 17:17</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.1 (<a href="http://orgmode.org">Org-mode</a> 9.0.6)</p>
 </div>
 </footer>
