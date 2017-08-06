@@ -347,8 +347,22 @@ Instead, it's loaded in another file that is ignored in git.
   (define-key org-mode-map (kbd "C-c b") 'org-src-create-and-open)
 #+END_SRC
 
+** Ert tests
+
+Run tests from tests.el, or all tests in tests/, interactively.
+
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+* Hooks
+** Delete trailing whitespace when saving
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
 * Keybindings
-  
+
 Bindings that are spesific to a package are defined together
 with that package.
 Bindings spesific to states the different
@@ -370,4 +384,3 @@ defined together with those functions.
 (global-set-key (kbd "C-x k") 'next-buffer)
 (global-set-key (kbd "C-x l") 'previous-buffer)
 #+END_SRC
-
