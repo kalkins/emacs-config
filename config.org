@@ -229,6 +229,31 @@ all line numbers off.
 						      (setq linum-relative-mode t))))))
 #+END_SRC
 
+* Autosaves and backups
+
+I prefer putting all autosaves and backups in one directory,
+so they don't clutter up my projects.
+
+#+BEGIN_SRC emacs-lisp
+  (defconst emacs-saves-dir "~/tmp/emacs")
+  (setq backup-directory-alist
+	`((".*" . ,emacs-saves-dir)))
+  (setq auto-save-file-name-transforms
+	`((".*" ,emacs-saves-dir t)))
+#+END_SRC
+
+* Web development
+** HTML
+*** Indentation
+
+Set HTML indentation to 4 spaces by default.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'html-mode-hook
+	    (lambda ()
+	      (set (make-local-variable 'sgml-basic-offset) 4)))
+#+END_SRC
+
 * Minor packages
 
 #+BEGIN_SRC emacs-lisp
