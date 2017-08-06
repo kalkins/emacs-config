@@ -172,6 +172,13 @@ I like to insert black newlines with RET in normal mode.
 						  (previous-line)))
 #+END_SRC
 
+Don't remap undo buttons in visual mode.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key evil-visual-state-map (kbd "u") 'undo-tree-undo)
+  (define-key evil-visual-state-map (kbd "C-r") 'undo-tree-redo)
+#+END_SRC
+
 Disable some keys, so they can be used for other stuff later.
 
 #+BEGIN_SRC emacs-lisp
