@@ -2,9 +2,9 @@
 
 * My Emacs config
 
-This repo contains my configuration files for emacs.
+This repo contains my configuration file for emacs.
 It is written in org mode using code blocks that get
-executed av launch. A pretty html version of the
+executed at launch. A pretty html version of the
 config can be found [[http://sindrestephansen.com/emacs-config][here]].
 
 Everyone is free to use this however they want, but

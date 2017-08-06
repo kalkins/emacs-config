@@ -1,6 +1,6 @@
 # My Emacs config
 
-This repo contains my configuration files for emacs. It is written in org mode using code blocks that get executed av launch. A pretty html version of the config can be found [here](http://sindrestephansen.com/emacs-config).
+This repo contains my configuration file for emacs. It is written in org mode using code blocks that get executed at launch. A pretty html version of the config can be found [here](http://sindrestephansen.com/emacs-config).
 
 Everyone is free to use this however they want, but you'll probably want to change some of the settings before actually using it.
 
