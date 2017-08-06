@@ -180,11 +180,16 @@ Disable some keys, so they can be used for other stuff later.
 
 * Projectile
 
-I use projectile for working on different projects.
+I use projectile for switching between and navigating projects
 
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :config
+    (setq projectile-globally-ignored-files
+	  (append '("~"
+		    ".swp"
+		    ".pyc")
+		  projectile-globally-ignored-files))
     (projectile-mode))
 
   (use-package helm-projectile
