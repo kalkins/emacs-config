@@ -5,11 +5,13 @@
 ;;;; You should restart emacs afterwards, to make sure that all
 ;;;; packages get loaded properly.
 
+;;; Code:
+
 ;; Install use-package, as it's not explictly installed
 ;; by the config, unless it has been installed already
-(when (not (require 'use-package nil t))
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-  (package-initialize)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(package-initialize)
+(unless (package-installed-p 'use-package)
   (package-install "use-package"))
 
 (let (config-dir config-path)
