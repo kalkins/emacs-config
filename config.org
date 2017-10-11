@@ -95,6 +95,12 @@ Hide the toolbar, menubar and scrollbar.
 (scroll-bar-mode -1)
 #+END_SRC
 
+** Theme
+
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'wombat)
+#+END_SRC
+
 ** Powerline
 
 #+BEGIN_SRC emacs-lisp
