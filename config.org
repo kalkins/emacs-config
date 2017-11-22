@@ -361,6 +361,13 @@ Run tests from tests.el, or all tests in tests/, interactively.
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
 
+** C++
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'c++-mode-hook (lambda ()
+			     (setq c-basic-offset 4)))
+#+END_SRC
+
 * Keybindings
 
 Bindings that are spesific to a package are defined together
