@@ -11,6 +11,7 @@
 ;; by the config, unless it has been installed already
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
+(package-refresh-contents)
 (unless (package-installed-p 'use-package)
   (package-install "use-package"))
 
