@@ -285,7 +285,7 @@ Set HTML indentation to 4 spaces by default.
       (custom-set-faces
        '(company-tooltip ((t (:background "#cccccc" :foreground "black"))))
        '(company-scrollbar-bg ((t (:background "#999999"))))
-       '(company-scrollbar-fg ((t (:background "#555555"))))
+       '(company-scrollbar-fg ((t (:background "#555555")))))))
 
   (use-package company-anaconda
     :init
