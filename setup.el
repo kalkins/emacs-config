@@ -14,7 +14,7 @@
 (package-initialize)
 (package-refresh-contents)
 (unless (package-installed-p 'use-package)
-  (package-install "use-package"))
+  (package-install 'use-package))
 
 (let (config-dir config-path)
   ;; Get the path to the config file which is in
