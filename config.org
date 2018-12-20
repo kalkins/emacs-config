@@ -13,7 +13,6 @@ and all code blocks are executed at launch.
 
 #+BEGIN_SRC emacs-lisp
 (require 'package)
-(require 'use-package)
 #+END_SRC
 
 Add extra package providers.
@@ -23,10 +22,14 @@ Add extra package providers.
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 #+END_SRC
 
-Initialize Package.el
+Initialize Package.el, and make sure use-package is installed
 
 #+BEGIN_SRC emacs-lisp
+(package-refresh-contents)
 (package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
 #+END_SRC
 
 ** Use-package
