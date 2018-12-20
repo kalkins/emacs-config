@@ -222,7 +222,8 @@ I use projectile for switching between and navigating projects
 		    ".swp"
 		    ".pyc")
 		  projectile-globally-ignored-files))
-    (projectile-mode))
+    (projectile-mode)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
   (use-package helm-projectile
     :config
