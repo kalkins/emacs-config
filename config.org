@@ -328,8 +328,6 @@ Set HTML indentation to 4 spaces by default.
   ;(require 'django-html-mode)
   ;(use-package django-mode)
 
-  (use-package doremi)
-
   (use-package flycheck
     :config
     (global-flycheck-mode))
