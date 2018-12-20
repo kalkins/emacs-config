@@ -27,8 +27,11 @@ To run the setup, execute the following command in
 a terminal:
 
 #+BEGIN_SRC sh
-  emacs -ql /path-to-repo/setup.el
+  emacs -q -l /path-to-repo/setup.el
 #+END_SRC
+
+During the setup it will ask for the path to the config.org
+file, in case you have it somewhere else.
 
 This starts emacs without an initilization script,
 and then loads the setup script.
