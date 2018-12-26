@@ -326,6 +326,18 @@ Set HTML indentation to 4 spaces by default.
   ;  (setq jedi:complete-on-dot t))
 #+END_SRC
 
+* Yasnippet
+
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :init
+    (setq yas-snippet-dirs
+	  (list (concat
+		 (file-name-directory (or load-file-name buffer-file-name))
+		 "snippets")))
+    (yas-global-mode 1))
+#+END_SRC
+
 * Minor packages
 
 #+BEGIN_SRC emacs-lisp
