@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: init-super
+# key: inits
+# --
+def __init__(self, *args, **kwargs):
+    super().__init__(self, *args, **kwargs)

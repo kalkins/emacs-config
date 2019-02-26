@@ -1,0 +1,4 @@
+# key: init
+# name: init
+# --
+def __init__(self):

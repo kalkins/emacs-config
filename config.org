@@ -330,6 +330,8 @@ Set HTML indentation to 4 spaces by default.
 
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
+    :bind (("C-c y c" . yas-new-snippet)
+	   ("C-c y i" . yas-insert-snippet))
     :init
     (setq yas-snippet-dirs
 	  (list (concat
