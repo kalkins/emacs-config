@@ -369,6 +369,12 @@ Set HTML indentation to 4 spaces by default.
     (require 'smartparens-config)
     (smartparens-global-mode)
     (show-smartparens-global-mode))
+
+  (use-package irony
+    :config
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
 
 * Local packages
