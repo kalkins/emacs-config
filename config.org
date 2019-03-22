@@ -280,16 +280,42 @@ so they don't clutter up my projects.
 	`((".*" ,emacs-saves-dir t)))
 #+END_SRC
 
-* Web development
-** HTML
-*** Indentation
+* Programming languages
+** Web development
+*** HTML
+**** Indentation
 
 Set HTML indentation to 4 spaces by default.
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'html-mode-hook
-	    (lambda ()
-	      (set (make-local-variable 'sgml-basic-offset) 4)))
+     (lambda ()
+       (set (make-local-variable 'sgml-basic-offset) 4)))
+#+END_SRC
+** Python
+
+#+BEGIN_SRC emacs-lisp
+  (use-package virtualenvwrapper
+    :config
+    (venv-initialize-interactive-shells)
+    (setq venv-location "~/env/"))
+
+  (use-package auto-virtualenvwrapper
+    :init
+    (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate))
+
+  ;(require 'django-html-mode)
+  ;(use-package django-mode)
+#+END_SRC
+
+** C/C++
+
+#+BEGIN_SRC emacs-lisp
+  (use-package irony
+    :config
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
 
 * Autocomplete
@@ -343,20 +369,6 @@ Set HTML indentation to 4 spaces by default.
 * Minor packages
 
 #+BEGIN_SRC emacs-lisp
-  (use-package virtualenvwrapper
-    :config
-    (venv-initialize-interactive-shells)
-    (setq venv-location "~/env/"))
-
-  (use-package auto-virtualenvwrapper
-    :init
-    (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate))
-
-  (use-package yasnippet)
-
-  ;(require 'django-html-mode)
-  ;(use-package django-mode)
-
   (use-package flycheck
     :config
     (global-flycheck-mode))
@@ -369,12 +381,6 @@ Set HTML indentation to 4 spaces by default.
     (require 'smartparens-config)
     (smartparens-global-mode)
     (show-smartparens-global-mode))
-
-  (use-package irony
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
 
 * Local packages
