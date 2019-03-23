@@ -114,6 +114,14 @@ Hide the toolbar, menubar and scrollbar.
   (powerline-center-evil-theme))
 #+END_SRC
 
+* Font
+** Set default font
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'default-frame-alist
+	       '(font . "DejaVu Sans Mono-12"))
+#+END_SRC
+
 * Alarm bell
 Emacs sometimes makes an annoying bell sound. This replaces that with
 a visible cue.
