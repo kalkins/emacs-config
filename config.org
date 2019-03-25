@@ -400,6 +400,14 @@ Set HTML indentation to 4 spaces by default.
     ; Automatic newline when pressing enter between parens
     (sp-local-pair 'c-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair 'c++-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
+
+  (use-package dumb-jump
+    :bind (:map evil-normal-state-map
+	   ("g d" . dumb-jump-go)
+	   ("g b" . dumb-jump-back)
+	   ("g i" . dumb-jump-quick-look))
+    :config
+    (dumb-jump-mode))
 #+END_SRC
 
 * Local packages
