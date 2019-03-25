@@ -396,7 +396,10 @@ Set HTML indentation to 4 spaces by default.
     :config
     (require 'smartparens-config)
     (smartparens-global-mode)
-    (show-smartparens-global-mode))
+    (show-smartparens-global-mode)
+    ; Automatic newline when pressing enter between parens
+    (sp-local-pair 'c-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
+    (sp-local-pair 'c++-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
 #+END_SRC
 
 * Local packages
