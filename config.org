@@ -325,6 +325,10 @@ Set HTML indentation to 4 spaces by default.
     (add-hook 'c-mode-hook 'irony-mode)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
+  (use-package company-irony)
+
+  (use-package company-irony-c-headers)
+
   (use-package cmake-mode)
 
   (use-package cmake-project)
