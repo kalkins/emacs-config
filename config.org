@@ -150,6 +150,12 @@ a visible cue.
 #+END_SRC
 
 * Git
+** Smerge
+
+#+BEGIN_SRC emacs-lisp
+  (setq smerge-command-prefix (kbd "C-c m"))
+#+END_SRC
+
 ** Magit
 
 #+BEGIN_SRC emacs-lisp
@@ -496,6 +502,7 @@ defined together with those functions.
 #+END_SRC
 
 ** Cycle buffers
+
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x k") 'next-buffer)
 (global-set-key (kbd "C-x l") 'previous-buffer)
