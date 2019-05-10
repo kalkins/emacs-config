@@ -294,6 +294,18 @@ so they don't clutter up my projects.
 	`((".*" ,emacs-saves-dir t)))
 #+END_SRC
 
+* Flycheck
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :config
+    (global-flycheck-mode))
+
+  (use-package flycheck-inline
+    :config
+    (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+#+END_SRC
+
 * Programming languages
 ** Web development
 *** HTML
@@ -345,7 +357,20 @@ Set HTML indentation to 4 spaces by default.
 ** ASM
 
 #+BEGIN_SRC emacs-lisp
-  (define-key asm-mode-map (kbd "C-j") nil)
+  (defun custom-asm-mode-setup ()
+      (define-key asm-mode-map (kbd "C-j") nil))
+
+  (add-hook 'asm-mode-hook 'custom-asm-mode-setup)
+#+END_SRC
+
+** Rust
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rust-mode)
+
+  (use-package flycheck-rust
+    :config
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
 
 * Autocomplete
@@ -399,10 +424,6 @@ Set HTML indentation to 4 spaces by default.
 * Minor packages
 
 #+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :config
-    (global-flycheck-mode))
-
   (use-package smartparens
     :demand
     :bind (("M-j" . sp-backward-slurp-sexp)
