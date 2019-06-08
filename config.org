@@ -165,6 +165,10 @@ I prefer to use jklø for navigation instead of hjkl.
   (define-key evil-motion-state-map (kbd "k") 'evil-next-line)
   (define-key evil-motion-state-map (kbd "l") 'evil-previous-line)
   (define-key evil-motion-state-map (kbd "ø") 'evil-forward-char)
+  ; For some reason ø is M-c in sudoedit/terminal mode
+  ; TODO: This works, but sets a C-u count to 8, meaning that
+  ; the next command is executed 8 times
+  (define-key evil-motion-state-map (kbd "M-c") 'evil-forward-char)
 #+END_SRC
 
 I like to insert black newlines with RET in normal mode.
