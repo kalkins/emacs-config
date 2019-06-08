@@ -148,39 +148,6 @@ a visible cue.
   :config
   (helm-mode 1))
 #+END_SRC
-
-* Git
-** Smerge
-
-#+BEGIN_SRC emacs-lisp
-  (setq smerge-command-prefix (kbd "C-c m"))
-#+END_SRC
-
-** Magit
-
-#+BEGIN_SRC emacs-lisp
-(use-package magit
-  :bind ("M-m" . magit-status))
-#+END_SRC
-
-** Evil-magit
-
-This package allows some vim navigation bindings to
-be used in the magit buffer. It uses default vim bindings,
-so I have to remap them to use jklø.
-
-
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-magit
-    :init
-    (setq evil-magit-state 'normal)
-    (setq evil-magit-use-y-for-yank nil)
-    :config
-    (evil-define-key evil-magit-state magit-mode-map "j" 'magit-log-popup)
-    (evil-define-key evil-magit-state magit-mode-map "k" 'evil-next-visual-line)
-    (evil-define-key evil-magit-state magit-mode-map "l" 'evil-previous-visual-line))
-#+END_SRC
-
 * Evil mode
 
 This package adds vim-like navigation to emacs.
@@ -222,6 +189,38 @@ Disable some keys, so they can be used for other stuff later.
 
 #+BEGIN_SRC emacs-lisp
 (define-key evil-motion-state-map (kbd "C-f") nil)
+#+END_SRC
+
+* Git
+** Smerge
+
+#+BEGIN_SRC emacs-lisp
+  (setq smerge-command-prefix (kbd "C-c m"))
+#+END_SRC
+
+** Magit
+
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :bind ("M-m" . magit-status))
+#+END_SRC
+
+** Evil-magit
+
+This package allows some vim navigation bindings to
+be used in the magit buffer. It uses default vim bindings,
+so I have to remap them to use jklø.
+
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-magit
+    :init
+    (setq evil-magit-state 'normal)
+    (setq evil-magit-use-y-for-yank nil)
+    :config
+    (evil-define-key evil-magit-state magit-mode-map "j" 'magit-log-popup)
+    (evil-define-key evil-magit-state magit-mode-map "k" 'evil-next-visual-line)
+    (evil-define-key evil-magit-state magit-mode-map "l" 'evil-previous-visual-line)
 #+END_SRC
 
 * Projectile
