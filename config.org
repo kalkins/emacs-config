@@ -231,6 +231,14 @@ so I have to remap them to use jklø.
     (evil-define-key evil-magit-state magit-mode-map (kbd "C-ø") 'windmove-right))
 #+END_SRC
 
+** Magit-todos
+
+#+BEGIN_SRC emacs-lisp
+  (use-package magit-todos
+    :config
+    (magit-todos-mode))
+#+END_SRC
+
 * Projectile
 
 I use projectile for switching between and navigating projects
