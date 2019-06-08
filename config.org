@@ -221,6 +221,10 @@ so I have to remap them to use jklø.
     (evil-define-key evil-magit-state magit-mode-map "j" 'magit-log-popup)
     (evil-define-key evil-magit-state magit-mode-map "k" 'evil-next-visual-line)
     (evil-define-key evil-magit-state magit-mode-map "l" 'evil-previous-visual-line)
+    (evil-define-key evil-magit-state magit-mode-map (kbd "C-k") 'magit-section-forward)
+    (evil-define-key evil-magit-state magit-mode-map (kbd "C-l") 'magit-section-backward)
+    (evil-define-key evil-magit-state magit-mode-map (kbd "C-j") 'windmove-left)
+    (evil-define-key evil-magit-state magit-mode-map (kbd "C-ø") 'windmove-right))
 #+END_SRC
 
 * Projectile
