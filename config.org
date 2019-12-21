@@ -486,8 +486,10 @@ Set HTML indentation to 4 spaces by default.
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :demand
-    :bind (("M-j" . sp-backward-slurp-sexp)
-	   ("M-ø" . sp-forward-slurp-sexp))
+    :bind (("M-j" . sp-forward-barf-sexp)
+	   ("M-ø" . sp-forward-slurp-sexp)
+	   ("M-l" . sp-backward-bard-sexp)
+	   ("M-k" . sp-backward-slurp-sexp))
     :config
     (require 'smartparens-config)
     (smartparens-global-mode)
