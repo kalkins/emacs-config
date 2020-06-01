@@ -467,6 +467,64 @@ Disable some keys, so they can be used for other stuff later.
 #+BEGIN_SRC emacs-lisp
 (define-key evil-motion-state-map (kbd "C-f") nil)
 #+END_SRC
+* PDF tools
+Use PDF tools instead of the default DocView.
+
+#+BEGIN_SRC emacs-lisp
+  (defun pdf-view-goto-page-or-first (count)
+    "Goto page COUNT.
+  If COUNT is not supplied, go to the first page."
+    (interactive "P")
+    (if count
+	(pdf-view-goto-page count)
+      (pdf-view-first-page)))
+
+  (defun pdf-view-goto-page-or-last (count)
+    "Goto page COUNT.
+  If COUNT is not supplied, go to the last page."
+    (interactive "P")
+    (if count
+	(pdf-view-goto-page count)
+      (pdf-view-last-page)))
+
+  (use-package pdf-tools
+    :mode "\\.pdf\\'"
+    :interpreter "pdf"
+    :bind (:map pdf-view-mode-map
+		("j"   . pdf-view-previous-page-command)
+		("k"   . (lambda () (interactive) (pdf-view-next-line-or-next-page 5)))
+		("l"   . (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5)))
+		("ø"   . pdf-view-next-page-command)
+		("g" . pdf-view-goto-page-or-first)
+		("G"   . pdf-view-goto-page-or-last)
+		("C-o" . pdf-history-backward)
+		("C-i" . pdf-history-forward)
+		("m"   . pdf-view-position-to-register)
+		("'"   . pdf-view-jump-to-register)
+		("/"   . pdf-occur)
+		("o"   . pdf-outline)
+		("f"   . pdf-links-action-perform)
+		("b"   . pdf-view-midnight-minor-mode)
+		("l"   . pdf-view-next-page-command))
+    :config
+    (pdf-tools-install))
+
+  ;  (evil-make-overriding-map pdf-view-mode-map 'normal)
+  ;  (evil-define-key 'normal pdf-view-mode-map
+  ;    "j" 'pdf-view-previous-page-command
+  ;    "k" (lambda () (interactive) (pdf-view-next-line-or-next-page 5))
+  ;    "l" (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5))
+  ;    "ø" 'pdf-view-first-page
+  ;    "G" 'pdf-view-last-page
+  ;    (kbd "C-o") 'pdf-history-backward
+  ;    (kbd "C-i") 'pdf-history-forward
+  ;    "m" 'pdf-view-position-to-register
+  ;    "'" 'pdf-view-jump-to-register
+  ;    "/" 'pdf-occur
+  ;    "o" 'pdf-outline
+  ;    "f" 'pdf-links-action-perform
+  ;    "b" 'pdf-view-midnight-minor-mode  "l" 'pdf-view-next-page-command))
+#+END_SRC
 
 * Git
 ** Smerge
