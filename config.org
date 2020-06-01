@@ -3,6 +3,7 @@
 #+EMAIL: sindre@sindrestephansen.com
 #+LANGUAGE: en
 #+LINK_HOME: http://sindrestephansen.com
+#+STARTUP: indent
 
 This is my configuration file for emacs (exported as twitter bootstrap html),
 the source of which can be found [[http://github.com/kalkins/emacs-config][here]]. The config is written using org mode,
@@ -10,7 +11,6 @@ and all code blocks are executed at launch.
 
 * Startup
 ** Toolbars and scollbar
-
 Hide the toolbar, menubar and scrollbar.
 
 #+BEGIN_SRC emacs-lisp
@@ -20,13 +20,11 @@ Hide the toolbar, menubar and scrollbar.
 #+END_SRC
 
 ** Theme
-
 #+BEGIN_SRC emacs-lisp
   (load-theme 'wombat)
 #+END_SRC
 
 ** Set default font
-
 #+BEGIN_SRC emacs-lisp
   ; Source: https://coderwall.com/p/ifgyag/change-font-size-in-emacs-dynamically-based-on-screen-resolution
   (setq default-font "DejaVu Sans Mono-%d")
@@ -73,7 +71,6 @@ Hide the toolbar, menubar and scrollbar.
 
 * Package management
 ** Package.el
-
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 #+END_SRC
@@ -96,7 +93,6 @@ Initialize Package.el, and make sure use-package is installed
 #+END_SRC
 
 ** Use-package
-
 Use-package allows for easier handling of packages, like setting settings and keybindings.
 
 Automatically download required packages.
@@ -388,7 +384,6 @@ Org export extensions.
 
 * Display
 ** Powerline
-
 #+BEGIN_SRC emacs-lisp
 (use-package powerline
   :config
@@ -411,7 +406,6 @@ a visible cue.
 
 * Search
 ** Helm
-
 #+BEGIN_SRC emacs-lisp
 (use-package helm
   :bind (("M-x" . helm-M-x)
@@ -422,7 +416,6 @@ a visible cue.
   (helm-mode 1))
 #+END_SRC
 * Evil mode
-
 This package adds vim-like navigation to emacs.
 
 #+BEGIN_SRC emacs-lisp
@@ -528,20 +521,17 @@ Use PDF tools instead of the default DocView.
 
 * Git
 ** Smerge
-
 #+BEGIN_SRC emacs-lisp
   (setq smerge-command-prefix (kbd "C-c m"))
 #+END_SRC
 
 ** Magit
-
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :bind ("M-m" . magit-status))
 #+END_SRC
 
 ** Evil-magit
-
 This package allows some vim navigation bindings to
 be used in the magit buffer. It uses default vim bindings,
 so I have to remap them to use jklø.
@@ -563,7 +553,6 @@ so I have to remap them to use jklø.
 #+END_SRC
 
 ** Magit-todos
-
 #+BEGIN_SRC emacs-lisp
   (use-package magit-todos
     :config
@@ -571,7 +560,6 @@ so I have to remap them to use jklø.
 #+END_SRC
 
 * Projectile
-
 I use projectile for switching between and navigating projects
 
 #+BEGIN_SRC emacs-lisp
@@ -591,7 +579,6 @@ I use projectile for switching between and navigating projects
 #+END_SRC
 
 * Line numbers
-
 I have line numbers off by default, but I want to
 be able to quickly turn them of and on. I often
 need relative numbers for evil mode commands.
@@ -628,7 +615,6 @@ all line numbers off.
 #+END_SRC
 
 * Autosaves and backups
-
 I prefer putting all autosaves and backups in one directory,
 so they don't clutter up my projects.
 
@@ -641,7 +627,6 @@ so they don't clutter up my projects.
 #+END_SRC
 
 * Flycheck
-
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :config
@@ -653,7 +638,6 @@ so they don't clutter up my projects.
 #+END_SRC
 
 * Autocomplete
-
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :config
@@ -761,7 +745,6 @@ Set HTML indentation to 4 spaces by default.
 #+END_SRC
 
 * Yasnippet
-
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :bind (("C-c y c" . yas-new-snippet)
@@ -775,7 +758,6 @@ Set HTML indentation to 4 spaces by default.
 #+END_SRC
 
 * Minor packages
-
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :demand
@@ -801,7 +783,6 @@ Set HTML indentation to 4 spaces by default.
 #+END_SRC
 
 * Local packages
-
 As local packages will vary between computers, the loading is not comitted to git.
 Instead, it's loaded in another file that is ignored in git.
 
@@ -813,7 +794,6 @@ Instead, it's loaded in another file that is ignored in git.
 
 * Custom functions
 ** Edit this config
-
 #+BEGIN_SRC emacs-lisp
   ;; Get the filepath when the code is first executed.
   ;; The code is moved to a .el file of the same name
@@ -831,7 +811,6 @@ Instead, it's loaded in another file that is ignored in git.
 #+END_SRC
 
 ** Create org src block and open in new buffer
-
 #+BEGIN_SRC emacs-lisp
   (defun org-src-create-and-open (lang)
     "Create a src block for the language the user types in, and open it in a new buffer."
@@ -847,7 +826,6 @@ Instead, it's loaded in another file that is ignored in git.
 #+END_SRC
 
 ** Ert tests
-
 Run tests from tests.el, or all tests in tests/, interactively.
 
 #+BEGIN_SRC emacs-lisp
@@ -855,13 +833,11 @@ Run tests from tests.el, or all tests in tests/, interactively.
 
 * Hooks
 ** Delete trailing whitespace when saving
-
 #+BEGIN_SRC emacs-lisp
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
 
 * Keybindings
-
 Bindings that are spesific to a package are defined together
 with that package.
 Bindings spesific to states the different
@@ -870,7 +846,6 @@ Bindings to custom functions in this file are
 defined together with those functions.
 
 ** Move between windows
-
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-j") 'windmove-left)
 (global-set-key (kbd "C-k") 'windmove-down)
@@ -879,13 +854,12 @@ defined together with those functions.
 #+END_SRC
 
 ** Cycle buffers
-
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x k") 'next-buffer)
 (global-set-key (kbd "C-x l") 'previous-buffer)
 #+END_SRC
-** Font size
 
+** Font size
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-+") 'text-scale-increase)
   (global-set-key (kbd "C--") 'text-scale-decrease)
