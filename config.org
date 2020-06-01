@@ -703,25 +703,31 @@ Set HTML indentation to 4 spaces by default.
 ** C/C++
 
 #+BEGIN_SRC emacs-lisp
-  (use-package irony
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+    (use-package irony
+      :config
+      (add-hook 'c++-mode-hook 'irony-mode)
+      (add-hook 'c-mode-hook 'irony-mode)
+      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-  (use-package flycheck-irony
-    :config
-    (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+    (use-package flycheck-irony
+      :config
+      (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
-  (use-package company-irony)
+    (use-package company-irony-c-headers
+      :config
+      (eval-after-load 'company
+	'(add-to-list 'company-backends 'company-irony-c-headers)))
 
-  (use-package company-irony-c-headers)
+    (use-package company-irony
+      :config
+      (eval-after-load 'company
+	'(add-to-list 'company-backends 'company-irony)))
 
-  (use-package cmake-mode)
+    (use-package cmake-mode)
 
-  (setq-default c-default-style "linux"
-		c-basic-offset 4
-		indent-tabs-mode t)
+    (setq-default c-default-style "linux"
+		  c-basic-offset 4
+		  indent-tabs-mode t)
 #+END_SRC
 
 ** ASM
