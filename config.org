@@ -594,6 +594,24 @@ so they don't clutter up my projects.
     (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
 #+END_SRC
 
+* Autocomplete
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :config
+    (add-hook 'after-init-hook 'global-company-mode)
+    (setq company-idle-delay 0)
+    (let ((bg (face-attribute 'default :background)))
+      (custom-set-faces
+       '(company-tooltip ((t (:background "#cccccc" :foreground "black"))))
+       '(company-scrollbar-bg ((t (:background "#999999"))))
+       '(company-scrollbar-fg ((t (:background "#555555")))))))
+
+  ;(use-package auto-complete
+  ;  :init
+  ;  (global-auto-complete-mode))
+#+END_SRC
+
 * Programming languages
 ** Web development
 *** HTML
@@ -623,6 +641,18 @@ Set HTML indentation to 4 spaces by default.
   (use-package auto-virtualenvwrapper
     :init
     (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate))
+
+  (defun jedi-python-mode-hook ()
+    (add-to-list 'company-backends 'company-jedi))
+
+  (use-package company-jedi
+    :init
+    (add-hook 'python-mode-hook 'jedi-python-mode-hook))
+
+  ;(use-package company-anaconda
+  ;  :init
+  ;  (add-to-list 'company-backends 'company-anaconda)
+  ;  (add-hook 'python-mode-hook 'anaconda-mode))
 
   ;(require 'django-html-mode)
   ;(use-package django-mode)
@@ -670,39 +700,6 @@ Set HTML indentation to 4 spaces by default.
     :config
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
-
-* Autocomplete
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :config
-    (add-hook 'after-init-hook 'global-company-mode)
-    (setq company-idle-delay 0)
-    (let ((bg (face-attribute 'default :background)))
-      (custom-set-faces
-       '(company-tooltip ((t (:background "#cccccc" :foreground "black"))))
-       '(company-scrollbar-bg ((t (:background "#999999"))))
-       '(company-scrollbar-fg ((t (:background "#555555")))))))
-
-  (use-package company-anaconda
-    :init
-    (add-to-list 'company-backends 'company-anaconda)
-    (add-hook 'python-mode-hook 'anaconda-mode))
-
-  ;(use-package company-jedi)
-  ;
-  ;(use-package auto-complete
-  ;  :init
-  ;  (global-auto-complete-mode))
-  ;
-  ;(use-package ac-anaconda
-  ;  :init
-  ;  (add-hook 'python-mode-hook 'ac-anaconda-setup))
-
-  ;(use-package jedi
-  ;  :init
-  ;  (add-hook 'python-mode-hook 'jedi:ac-setup)
-  ;  (setq jedi:complete-on-dot t))
 #+END_SRC
 
 * Yasnippet
