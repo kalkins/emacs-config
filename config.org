@@ -21,52 +21,52 @@ Hide the toolbar, menubar and scrollbar.
 
 ** Theme
 #+BEGIN_SRC emacs-lisp
-  (load-theme 'wombat)
+(load-theme 'wombat)
 #+END_SRC
 
 ** Set default font
 #+BEGIN_SRC emacs-lisp
-  ; Source: https://coderwall.com/p/ifgyag/change-font-size-in-emacs-dynamically-based-on-screen-resolution
-  (setq default-font "DejaVu Sans Mono-%d")
-  (setq font-size-low-res 10)
-  (setq font-size-high-res 10)
+; Source: https://coderwall.com/p/ifgyag/change-font-size-in-emacs-dynamically-based-on-screen-resolution
+(setq default-font "DejaVu Sans Mono-%d")
+(setq font-size-low-res 10)
+(setq font-size-high-res 10)
 
-  (defun frame-is-high-res ()
-      (> (display-pixel-width) 10000))
+(defun frame-is-high-res ()
+  (> (display-pixel-width) 10000))
 
-  (defun fontify-frame (&optional frame)
-    (interactive)
-    (if window-system
-	(let ((font (format
-		     default-font
-		     (if (frame-is-high-res)
-			 font-size-high-res
-		       font-size-low-res))))
+(defun fontify-frame (&optional frame)
+  (interactive)
+  (if window-system
+      (let ((font (format
+		   default-font
+		   (if (frame-is-high-res)
+		       font-size-high-res
+		     font-size-low-res))))
 
-	  (set-frame-parameter frame 'font font))))
+	(set-frame-parameter frame 'font font))))
 
-  (defun frame-increase-font-size (&optional frame)
-    (interactive)
-    (progn
-      (if (frame-is-high-res)
-	  (incf font-size-high-res)
-	(incf font-size-low-res))
-      (fontify-frame frame)))
+(defun frame-increase-font-size (&optional frame)
+  (interactive)
+  (progn
+    (if (frame-is-high-res)
+	(incf font-size-high-res)
+      (incf font-size-low-res))
+    (fontify-frame frame)))
 
-  (defun frame-decrease-font-size (&optional frame)
-    (interactive)
-    (progn
-      (if (frame-is-high-res)
-	  (decf font-size-high-res)
-	(decf font-size-low-res))
-      (fontify-frame frame)))
+(defun frame-decrease-font-size (&optional frame)
+  (interactive)
+  (progn
+    (if (frame-is-high-res)
+	(decf font-size-high-res)
+      (decf font-size-low-res))
+    (fontify-frame frame)))
 
-  (fontify-frame nil)
+(fontify-frame nil)
 
-  (global-set-key (kbd "C-M-j") 'frame-decrease-font-size)
-  (global-set-key (kbd "C-M-ø") 'frame-increase-font-size)
+(global-set-key (kbd "C-M-j") 'frame-decrease-font-size)
+(global-set-key (kbd "C-M-ø") 'frame-increase-font-size)
 
-  (push 'fontify-frame after-make-frame-functions)
+(push 'fontify-frame after-make-frame-functions)
 #+END_SRC
 
 * Package management
@@ -109,7 +109,7 @@ Use pretty bullets instead of asterisks in headings.
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook
-    (lambda () (org-bullets-mode t))))
+	    (lambda () (org-bullets-mode t))))
 #+END_SRC
 
 Only use one indented bullet per heading.
@@ -125,6 +125,15 @@ Use proper syntax highlighting in these source blocks.
 (setq org-src-fontify-natively t)
 #+END_SRC
 
+Org mode likes to indent the code in the block two spaces (so it lines up with BEGIN_SRC),
+which breaks the code alignment when using tabs.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-edit-src-content-indentation 0)
+(setq org-src-tab-acts-natively t)
+(setq org-src-preserve-indentation t)
+#+END_SRC
+
 Keybinding for editing src blocks.
 
 #+BEGIN_SRC emacs-lisp
@@ -135,7 +144,7 @@ Keybinding for editing src blocks.
 Make inline latex bigger, so it's easier to read.
 
 #+BEGIN_SRC emacs-lisp
-  (plist-put org-format-latex-options :scale 1.5)
+(plist-put org-format-latex-options :scale 1.5)
 #+END_SRC
 
 ** Inline youtube links
@@ -144,146 +153,146 @@ A copy of [[https://github.com/TobiasZawada/org-yt/blob/master/org-yt.el][this p
 #+BEGIN_SRC emacs-lisp
   ;;; org-yt.el --- Org youtube links.                 -*- lexical-binding: t; -*-
 
-  ;; Copyright (C) 2018  U-ESI-INTERNAL\TOZ
+;; Copyright (C) 2018  U-ESI-INTERNAL\TOZ
 
-  ;; Author: U-ESI-INTERNAL\TOZ <TOZ@smtp.1und1.de>
-  ;; Keywords: multimedia
+;; Author: U-ESI-INTERNAL\TOZ <TOZ@smtp.1und1.de>
+;; Keywords: multimedia
 
-  ;; This program is free software; you can redistribute it and/or modify
-  ;; it under the terms of the GNU General Public License as published by
-  ;; the Free Software Foundation, either version 3 of the License, or
-  ;; (at your option) any later version.
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
 
-  ;; This program is distributed in the hope that it will be useful,
-  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ;; GNU General Public License for more details.
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
 
-  ;; You should have received a copy of the GNU General Public License
-  ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   ;;; Commentary:
 
-  ;; Idea from  https://emacs.stackexchange.com/questions/38098/org-mode-custom-youtube-link-syntax
+;; Idea from  https://emacs.stackexchange.com/questions/38098/org-mode-custom-youtube-link-syntax
 
   ;;; Code:
 
-  (require 'org)
-  (require 'org-element)
+(require 'org)
+(require 'org-element)
 
-  (defcustom org-yt-url-protocol "yt"
-    "Protocol identifier for youtube links."
-    :group 'org-yt
-    :type 'string)
+(defcustom org-yt-url-protocol "yt"
+  "Protocol identifier for youtube links."
+  :group 'org-yt
+  :type 'string)
 
-  (defun org-image-update-overlay (file link &optional data-p refresh)
-    "Create image overlay for FILE associtated with org-element LINK.
+(defun org-image-update-overlay (file link &optional data-p refresh)
+  "Create image overlay for FILE associtated with org-element LINK.
   If DATA-P is non-nil FILE is not a file name but a string with the image data.
   If REFRESH is non-nil don't download the file but refresh the image.
   See also `create-image'.
   This function is almost a duplicate of a part of `org-display-inline-images'."
-    (when (or data-p (file-exists-p file))
-      (let ((width
-	     ;; Apply `org-image-actual-width' specifications.
-	     (cond
-	      ((not (image-type-available-p 'imagemagick)) nil)
-	      ((eq org-image-actual-width t) nil)
-	      ((listp org-image-actual-width)
-	       (or
-		;; First try to find a width among
-		;; attributes associated to the paragraph
-		;; containing link.
-		(let ((paragraph
-		       (let ((e link))
-			 (while (and (setq e (org-element-property
-					      :parent e))
-				     (not (eq (org-element-type e)
-					      'paragraph))))
-			 e)))
-		  (when paragraph
-		    (save-excursion
-		      (goto-char (org-element-property :begin paragraph))
-		      (when
-			  (re-search-forward
-			   "^[ \t]*#\\+attr_.*?: +.*?:width +\\(\\S-+\\)"
-			   (org-element-property
-			    :post-affiliated paragraph)
-			   t)
-			(string-to-number (match-string 1))))))
-		;; Otherwise, fall-back to provided number.
-		(car org-image-actual-width)))
-	      ((numberp org-image-actual-width)
-	       org-image-actual-width)))
-	    (old (get-char-property-and-overlay
-		  (org-element-property :begin link)
-		  'org-image-overlay)))
-	(if (and (car-safe old) refresh)
-	    (image-refresh (overlay-get (cdr old) 'display))
-	  (let ((image (create-image file
-				     (and width 'imagemagick)
-				     data-p
-				     :width width)))
-	    (when image
-	      (let* ((link
-		      ;; If inline image is the description
-		      ;; of another link, be sure to
-		      ;; consider the latter as the one to
-		      ;; apply the overlay on.
-		      (let ((parent
-			     (org-element-property :parent link)))
-			(if (eq (org-element-type parent) 'link)
-			    parent
-			  link)))
-		     (ov (make-overlay
-			  (org-element-property :begin link)
-			  (progn
-			    (goto-char
-			     (org-element-property :end link))
-			    (skip-chars-backward " \t")
-			    (point)))))
-		(overlay-put ov 'display image)
-		(overlay-put ov 'face 'default)
-		(overlay-put ov 'org-image-overlay t)
-		(overlay-put
-		 ov 'modification-hooks
-		 (list 'org-display-inline-remove-overlay))
-		(push ov org-inline-image-overlays)
-		ov)))))))
+  (when (or data-p (file-exists-p file))
+    (let ((width
+	   ;; Apply `org-image-actual-width' specifications.
+	   (cond
+	    ((not (image-type-available-p 'imagemagick)) nil)
+	    ((eq org-image-actual-width t) nil)
+	    ((listp org-image-actual-width)
+	     (or
+	      ;; First try to find a width among
+	      ;; attributes associated to the paragraph
+	      ;; containing link.
+	      (let ((paragraph
+		     (let ((e link))
+		       (while (and (setq e (org-element-property
+					    :parent e))
+				   (not (eq (org-element-type e)
+					    'paragraph))))
+		       e)))
+		(when paragraph
+		  (save-excursion
+		    (goto-char (org-element-property :begin paragraph))
+		    (when
+			(re-search-forward
+			 "^[ \t]*#\\+attr_.*?: +.*?:width +\\(\\S-+\\)"
+			 (org-element-property
+			  :post-affiliated paragraph)
+			 t)
+		      (string-to-number (match-string 1))))))
+	      ;; Otherwise, fall-back to provided number.
+	      (car org-image-actual-width)))
+	    ((numberp org-image-actual-width)
+	     org-image-actual-width)))
+	  (old (get-char-property-and-overlay
+		(org-element-property :begin link)
+		'org-image-overlay)))
+      (if (and (car-safe old) refresh)
+	  (image-refresh (overlay-get (cdr old) 'display))
+	(let ((image (create-image file
+				   (and width 'imagemagick)
+				   data-p
+				   :width width)))
+	  (when image
+	    (let* ((link
+		    ;; If inline image is the description
+		    ;; of another link, be sure to
+		    ;; consider the latter as the one to
+		    ;; apply the overlay on.
+		    (let ((parent
+			   (org-element-property :parent link)))
+		      (if (eq (org-element-type parent) 'link)
+			  parent
+			link)))
+		   (ov (make-overlay
+			(org-element-property :begin link)
+			(progn
+			  (goto-char
+			   (org-element-property :end link))
+			  (skip-chars-backward " \t")
+			  (point)))))
+	      (overlay-put ov 'display image)
+	      (overlay-put ov 'face 'default)
+	      (overlay-put ov 'org-image-overlay t)
+	      (overlay-put
+	       ov 'modification-hooks
+	       (list 'org-display-inline-remove-overlay))
+	      (push ov org-inline-image-overlays)
+	      ov)))))))
 
-  (defun org-yt-get-image (url)
-    "Retrieve image from URL."
-    (let ((image-buf (url-retrieve-synchronously url)))
-      (when image-buf
-	(with-current-buffer image-buf
-	  (goto-char (point-min))
-	  (when (looking-at "HTTP/")
-	    (delete-region (point-min)
-			   (progn (re-search-forward "\n[\n]+")
-				  (point))))
-	  (buffer-substring-no-properties (point-min) (point-max))))))
+(defun org-yt-get-image (url)
+  "Retrieve image from URL."
+  (let ((image-buf (url-retrieve-synchronously url)))
+    (when image-buf
+      (with-current-buffer image-buf
+	(goto-char (point-min))
+	(when (looking-at "HTTP/")
+	  (delete-region (point-min)
+			 (progn (re-search-forward "\n[\n]+")
+				(point))))
+	(buffer-substring-no-properties (point-min) (point-max))))))
 
-  (defconst org-yt-video-id-regexp "[-_[:alnum:]]\\{10\\}[AEIMQUYcgkosw048]"
-    "Regexp matching youtube video id's taken from `https://webapps.stackexchange.com/questions/54443/format-for-id-of-youtube-video'.")
+(defconst org-yt-video-id-regexp "[-_[:alnum:]]\\{10\\}[AEIMQUYcgkosw048]"
+  "Regexp matching youtube video id's taken from `https://webapps.stackexchange.com/questions/54443/format-for-id-of-youtube-video'.")
 
-  (defun org-yt-follow (video-id)
-    "Open youtube with VIDEO-ID."
-    (browse-url (concat "https://youtu.be/" video-id)))
+(defun org-yt-follow (video-id)
+  "Open youtube with VIDEO-ID."
+  (browse-url (concat "https://youtu.be/" video-id)))
 
-  (defun org-yt-image-data-fun (_protocol link _description)
-    "Get image corresponding to LINK from youtube.
+(defun org-yt-image-data-fun (_protocol link _description)
+  "Get image corresponding to LINK from youtube.
   Use this as :image-data-fun property in `org-link-properties'.
   See `org-display-user-inline-images' for a description of :image-data-fun."
-    (when (string-match org-yt-video-id-regexp link)
-      (org-yt-get-image (format "http://img.youtube.com/vi/%s/0.jpg" link))))
+  (when (string-match org-yt-video-id-regexp link)
+    (org-yt-get-image (format "http://img.youtube.com/vi/%s/0.jpg" link))))
 
-  (org-link-set-parameters org-yt-url-protocol
-			   :follow #'org-yt-follow
-			   :image-data-fun #'org-yt-image-data-fun)
+(org-link-set-parameters org-yt-url-protocol
+			 :follow #'org-yt-follow
+			 :image-data-fun #'org-yt-image-data-fun)
 
-  (require 'subr-x)
+(require 'subr-x)
 
-  (defun org-display-user-inline-images (&optional _include-linked _refresh beg end)
-    "Like `org-display-inline-images' but for image data links.
+(defun org-display-user-inline-images (&optional _include-linked _refresh beg end)
+  "Like `org-display-inline-images' but for image data links.
   _INCLUDE-LINKED and _REFRESH are ignored.
   Restrict to region between BEG and END if both are non-nil.
   Image data links have a :image-data-fun parameter.
@@ -295,44 +304,44 @@ A copy of [[https://github.com/TobiasZawada/org-yt/blob/master/org-yt.el][this p
 
   Note that only bracket links are allowed as image data links
   with one of the formats [[PROTOCOL:LINK]] or [[PROTOCOL:LINK][DESCRIPTION]] are recognized."
-    (interactive)
-    (when (and (called-interactively-p 'any)
-	       (use-region-p))
-      (setq beg (region-beginning)
-	    end (region-end)))
-    (when (display-graphic-p)
-      (org-with-wide-buffer
-       (goto-char (or beg (point-min)))
-       (when-let ((image-data-link-parameters
-		   (cl-loop for link-par-entry in org-link-parameters
-			    with fun
-			    when (setq fun (plist-get (cdr link-par-entry) :image-data-fun))
-			    collect (cons (car link-par-entry) fun)))
-		  (image-data-link-re (regexp-opt (mapcar 'car image-data-link-parameters)))
-		  (re (format "\\[\\[\\(%s\\):\\([^]]+\\)\\]\\(?:\\[\\([^]]+\\)\\]\\)?\\]"
-			      image-data-link-re)))
-	 (while (re-search-forward re end t)
-	   (let* ((protocol (match-string-no-properties 1))
-		  (link (match-string-no-properties 2))
-		  (description (match-string-no-properties 3))
-		  (image-data-link (assoc-string protocol image-data-link-parameters))
-		  (el (save-excursion (goto-char (match-beginning 1)) (org-element-context)))
-		  image-data)
-	     (when el
-	       (setq image-data
-		     (or (let ((old (get-char-property-and-overlay
-				     (org-element-property :begin el)
-				     'org-image-overlay)))
-			   (and old
-				(car-safe old)
-				(overlay-get (cdr old) 'display)))
-			 (funcall (cdr image-data-link) protocol link description)))
-	       (when image-data
-		 (let ((ol (org-image-update-overlay image-data el t t)))
-		   (when (and ol description)
-		     (overlay-put ol 'after-string description)))))))))))
+  (interactive)
+  (when (and (called-interactively-p 'any)
+	     (use-region-p))
+    (setq beg (region-beginning)
+	  end (region-end)))
+  (when (display-graphic-p)
+    (org-with-wide-buffer
+     (goto-char (or beg (point-min)))
+     (when-let ((image-data-link-parameters
+		 (cl-loop for link-par-entry in org-link-parameters
+			  with fun
+			  when (setq fun (plist-get (cdr link-par-entry) :image-data-fun))
+			  collect (cons (car link-par-entry) fun)))
+		(image-data-link-re (regexp-opt (mapcar 'car image-data-link-parameters)))
+		(re (format "\\[\\[\\(%s\\):\\([^]]+\\)\\]\\(?:\\[\\([^]]+\\)\\]\\)?\\]"
+			    image-data-link-re)))
+       (while (re-search-forward re end t)
+	 (let* ((protocol (match-string-no-properties 1))
+		(link (match-string-no-properties 2))
+		(description (match-string-no-properties 3))
+		(image-data-link (assoc-string protocol image-data-link-parameters))
+		(el (save-excursion (goto-char (match-beginning 1)) (org-element-context)))
+		image-data)
+	   (when el
+	     (setq image-data
+		   (or (let ((old (get-char-property-and-overlay
+				   (org-element-property :begin el)
+				   'org-image-overlay)))
+			 (and old
+			      (car-safe old)
+			      (overlay-get (cdr old) 'display)))
+		       (funcall (cdr image-data-link) protocol link description)))
+	     (when image-data
+	       (let ((ol (org-image-update-overlay image-data el t t)))
+		 (when (and ol description)
+		   (overlay-put ol 'after-string description)))))))))))
 
-  (advice-add #'org-display-inline-images :after #'org-display-user-inline-images)
+(advice-add #'org-display-inline-images :after #'org-display-user-inline-images)
   ;;; org-yt.el ends here
 #+END_SRC
 
@@ -341,45 +350,53 @@ Sometimes it's nice to display online images inline. Copied from [[https://emacs
 Requires the youtube package above.
 
 #+BEGIN_SRC emacs-lisp
-  (defun org-image-link (protocol link _description)
-    "Interpret LINK as base64-encoded image data."
-    (cl-assert (string-match "\\`img" protocol) nil
-	       "Expected protocol type starting with img")
-    (let ((buf (url-retrieve-synchronously (concat (substring protocol 3) ":" link))))
-      (cl-assert buf nil
-		 "Download of image \"%s\" failed." link)
-      (with-current-buffer buf
-	(goto-char (point-min))
-	(re-search-forward "\r?\n\r?\n")
-	(buffer-substring-no-properties (point) (point-max)))))
+(defun org-image-link (protocol link _description)
+  "Interpret LINK as base64-encoded image data."
+  (cl-assert (string-match "\\`img" protocol) nil
+	     "Expected protocol type starting with img")
+  (let ((buf (url-retrieve-synchronously (concat (substring protocol 3) ":" link))))
+    (cl-assert buf nil
+	       "Download of image \"%s\" failed." link)
+    (with-current-buffer buf
+      (goto-char (point-min))
+      (re-search-forward "\r?\n\r?\n")
+      (buffer-substring-no-properties (point) (point-max)))))
 
-  (org-link-set-parameters
-   "imghttp"
-   :image-data-fun #'org-image-link)
+(org-link-set-parameters
+ "imghttp"
+ :image-data-fun #'org-image-link)
 
-  (org-link-set-parameters
-   "imghttps"
-   :image-data-fun #'org-image-link)
+(org-link-set-parameters
+ "imghttps"
+ :image-data-fun #'org-image-link)
 #+END_SRC
 
 ** Keybindings
+Set return (or enter) to indent by default.
+
+#+BEGIN_SRC emacs-lisp
+(define-key org-mode-map (kbd "RET") (lambda ()
+				       (interactive)
+				       (org-return t)))
+#+END_SRC
+
 Disable org bindings that are used for other stuff.
 
 #+BEGIN_SRC emacs-lisp
-  (define-key org-mode-map (kbd "C-j") nil)
-  (define-key org-mode-map (kbd "C-k") nil)
+(define-key org-mode-map (kbd "C-j") nil)
+(define-key org-mode-map (kbd "C-k") nil)
 #+END_SRC
 
 ** Export
 Org export extensions.
 
 #+BEGIN_SRC emacs-lisp
-  ;; Github markdown
-  (use-package ox-gfm)
-  ;; Twitter bootstrap
-  (use-package ox-twbs)
-  ;; Syntax highlighting in exported html
-  (use-package htmlize)
+;; Github markdown
+(use-package ox-gfm)
+;; Twitter bootstrap
+(use-package ox-twbs)
+;; Syntax highlighting in exported html
+(use-package htmlize)
 #+END_SRC
 
 * Display
@@ -395,13 +412,13 @@ Emacs sometimes makes an annoying bell sound. This replaces that with
 a visible cue.
 
 #+BEGIN_SRC emacs-lisp
-  (setq ring-bell-function
-	(lambda ()
-	  (let ((orig-fg (face-foreground 'mode-line)))
-	    (set-face-foreground 'mode-line "#F2804F")
-	    (run-with-idle-timer 0.1 nil
-				 (lambda (fg) (set-face-foreground 'mode-line fg))
-				 orig-fg))))
+(setq ring-bell-function
+      (lambda ()
+	(let ((orig-fg (face-foreground 'mode-line)))
+	  (set-face-foreground 'mode-line "#F2804F")
+	  (run-with-idle-timer 0.1 nil
+			       (lambda (fg) (set-face-foreground 'mode-line fg))
+			       orig-fg))))
 #+END_SRC
 
 * Search
@@ -419,40 +436,40 @@ a visible cue.
 This package adds vim-like navigation to emacs.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package evil
-    :config
-    (evil-mode 1))
+(use-package evil
+  :config
+  (evil-mode 1))
 #+END_SRC
 
 I prefer to use jklø for navigation instead of hjkl.
 
 #+BEGIN_SRC emacs-lisp
-  (define-key evil-motion-state-map (kbd "j") 'evil-backward-char)
-  (define-key evil-motion-state-map (kbd "k") 'evil-next-line)
-  (define-key evil-motion-state-map (kbd "l") 'evil-previous-line)
-  (define-key evil-motion-state-map (kbd "ø") 'evil-forward-char)
-  ; For some reason ø is M-c in sudoedit/terminal mode
-  ; TODO: This works, but sets a C-u count to 8, meaning that
-  ; the next command is executed 8 times
-  (define-key evil-motion-state-map (kbd "M-c") 'evil-forward-char)
+(define-key evil-motion-state-map (kbd "j") 'evil-backward-char)
+(define-key evil-motion-state-map (kbd "k") 'evil-next-line)
+(define-key evil-motion-state-map (kbd "l") 'evil-previous-line)
+(define-key evil-motion-state-map (kbd "ø") 'evil-forward-char)
+					; For some reason ø is M-c in sudoedit/terminal mode
+					; TODO: This works, but sets a C-u count to 8, meaning that
+					; the next command is executed 8 times
+(define-key evil-motion-state-map (kbd "M-c") 'evil-forward-char)
 #+END_SRC
 
-I like to insert black newlines with RET in normal mode.
+I like to insert blank newlines with RET in normal mode.
 
 #+BEGIN_SRC emacs-lisp
-  (define-key evil-normal-state-map (kbd "RET") (lambda ()
-						  (interactive)
-						  (next-line)
-						  (beginning-of-line)
-						  (newline)
-						  (previous-line)))
+(define-key evil-normal-state-map (kbd "RET") (lambda ()
+						(interactive)
+						(next-line)
+						(beginning-of-line)
+						(newline)
+						(previous-line)))
 #+END_SRC
 
 Don't remap undo buttons in visual mode.
 
 #+BEGIN_SRC emacs-lisp
-  (define-key evil-visual-state-map (kbd "u") 'undo-tree-undo)
-  (define-key evil-visual-state-map (kbd "C-r") 'undo-tree-redo)
+(define-key evil-visual-state-map (kbd "u") 'undo-tree-undo)
+(define-key evil-visual-state-map (kbd "C-r") 'undo-tree-redo)
 #+END_SRC
 
 Disable some keys, so they can be used for other stuff later.
@@ -464,71 +481,71 @@ Disable some keys, so they can be used for other stuff later.
 Use PDF tools instead of the default DocView.
 
 #+BEGIN_SRC emacs-lisp
-  (defun pdf-view-goto-page-or-first (count)
-    "Goto page COUNT.
+(defun pdf-view-goto-page-or-first (count)
+  "Goto page COUNT.
   If COUNT is not supplied, go to the first page."
-    (interactive "P")
-    (if count
-	(pdf-view-goto-page count)
-      (pdf-view-first-page)))
+  (interactive "P")
+  (if count
+      (pdf-view-goto-page count)
+    (pdf-view-first-page)))
 
-  (defun pdf-view-goto-page-or-last (count)
-    "Goto page COUNT.
+(defun pdf-view-goto-page-or-last (count)
+  "Goto page COUNT.
   If COUNT is not supplied, go to the last page."
-    (interactive "P")
-    (if count
-	(pdf-view-goto-page count)
-      (pdf-view-last-page)))
+  (interactive "P")
+  (if count
+      (pdf-view-goto-page count)
+    (pdf-view-last-page)))
 
-  (use-package pdf-tools
-    :mode "\\.pdf\\'"
-    :interpreter "pdf"
-    :bind (:map pdf-view-mode-map
-		("j"   . pdf-view-previous-page-command)
-		("k"   . (lambda () (interactive) (pdf-view-next-line-or-next-page 5)))
-		("l"   . (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5)))
-		("ø"   . pdf-view-next-page-command)
-		("g" . pdf-view-goto-page-or-first)
-		("G"   . pdf-view-goto-page-or-last)
-		("C-o" . pdf-history-backward)
-		("C-i" . pdf-history-forward)
-		("m"   . pdf-view-position-to-register)
-		("'"   . pdf-view-jump-to-register)
-		("/"   . pdf-occur)
-		("o"   . pdf-outline)
-		("f"   . pdf-links-action-perform)
-		("b"   . pdf-view-midnight-minor-mode)
-		("l"   . pdf-view-next-page-command))
-    :config
-    (pdf-tools-install))
+(use-package pdf-tools
+  :mode "\\.pdf\\'"
+  :interpreter "pdf"
+  :bind (:map pdf-view-mode-map
+	      ("j"   . pdf-view-previous-page-command)
+	      ("k"   . (lambda () (interactive) (pdf-view-next-line-or-next-page 5)))
+	      ("l"   . (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5)))
+	      ("ø"   . pdf-view-next-page-command)
+	      ("g"   . pdf-view-goto-page-or-first)
+	      ("G"   . pdf-view-goto-page-or-last)
+	      ("C-o" . pdf-history-backward)
+	      ("C-i" . pdf-history-forward)
+	      ("m"   . pdf-view-position-to-register)
+	      ("'"   . pdf-view-jump-to-register)
+	      ("/"   . pdf-occur)
+	      ("o"   . pdf-outline)
+	      ("f"   . pdf-links-action-perform)
+	      ("b"   . pdf-view-midnight-minor-mode)
+	      ("l"   . pdf-view-next-page-command))
+  :config
+  (pdf-tools-install))
 
-  ;  (evil-make-overriding-map pdf-view-mode-map 'normal)
-  ;  (evil-define-key 'normal pdf-view-mode-map
-  ;    "j" 'pdf-view-previous-page-command
-  ;    "k" (lambda () (interactive) (pdf-view-next-line-or-next-page 5))
-  ;    "l" (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5))
-  ;    "ø" 'pdf-view-first-page
-  ;    "G" 'pdf-view-last-page
-  ;    (kbd "C-o") 'pdf-history-backward
-  ;    (kbd "C-i") 'pdf-history-forward
-  ;    "m" 'pdf-view-position-to-register
-  ;    "'" 'pdf-view-jump-to-register
-  ;    "/" 'pdf-occur
-  ;    "o" 'pdf-outline
-  ;    "f" 'pdf-links-action-perform
-  ;    "b" 'pdf-view-midnight-minor-mode  "l" 'pdf-view-next-page-command))
+					;  (evil-make-overriding-map pdf-view-mode-map 'normal)
+					;  (evil-define-key 'normal pdf-view-mode-map
+					;    "j" 'pdf-view-previous-page-command
+					;    "k" (lambda () (interactive) (pdf-view-next-line-or-next-page 5))
+					;    "l" (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5))
+					;    "ø" 'pdf-view-first-page
+					;    "G" 'pdf-view-last-page
+					;    (kbd "C-o") 'pdf-history-backward
+					;    (kbd "C-i") 'pdf-history-forward
+					;    "m" 'pdf-view-position-to-register
+					;    "'" 'pdf-view-jump-to-register
+					;    "/" 'pdf-occur
+					;    "o" 'pdf-outline
+					;    "f" 'pdf-links-action-perform
+					;    "b" 'pdf-view-midnight-minor-mode  "l" 'pdf-view-next-page-command))
 #+END_SRC
 
 * Git
 ** Smerge
 #+BEGIN_SRC emacs-lisp
-  (setq smerge-command-prefix (kbd "C-c m"))
+(setq smerge-command-prefix (kbd "C-c m"))
 #+END_SRC
 
 ** Magit
 #+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :bind ("M-m" . magit-status))
+(use-package magit
+  :bind ("M-m" . magit-status))
 #+END_SRC
 
 ** Evil-magit
@@ -538,44 +555,44 @@ so I have to remap them to use jklø.
 
 
 #+BEGIN_SRC emacs-lisp
-  (use-package evil-magit
-    :init
-    (setq evil-magit-state 'normal)
-    (setq evil-magit-use-y-for-yank nil)
-    :config
-    (evil-define-key evil-magit-state magit-mode-map "j" 'magit-log-popup)
-    (evil-define-key evil-magit-state magit-mode-map "k" 'evil-next-visual-line)
-    (evil-define-key evil-magit-state magit-mode-map "l" 'evil-previous-visual-line)
-    (evil-define-key evil-magit-state magit-mode-map (kbd "C-k") 'magit-section-forward)
-    (evil-define-key evil-magit-state magit-mode-map (kbd "C-l") 'magit-section-backward)
-    (evil-define-key evil-magit-state magit-mode-map (kbd "C-j") 'windmove-left)
-    (evil-define-key evil-magit-state magit-mode-map (kbd "C-ø") 'windmove-right))
+(use-package evil-magit
+  :init
+  (setq evil-magit-state 'normal)
+  (setq evil-magit-use-y-for-yank nil)
+  :config
+  (evil-define-key evil-magit-state magit-mode-map "j" 'magit-log-popup)
+  (evil-define-key evil-magit-state magit-mode-map "k" 'evil-next-visual-line)
+  (evil-define-key evil-magit-state magit-mode-map "l" 'evil-previous-visual-line)
+  (evil-define-key evil-magit-state magit-mode-map (kbd "C-k") 'magit-section-forward)
+  (evil-define-key evil-magit-state magit-mode-map (kbd "C-l") 'magit-section-backward)
+  (evil-define-key evil-magit-state magit-mode-map (kbd "C-j") 'windmove-left)
+  (evil-define-key evil-magit-state magit-mode-map (kbd "C-ø") 'windmove-right))
 #+END_SRC
 
 ** Magit-todos
 #+BEGIN_SRC emacs-lisp
-  (use-package magit-todos
-    :config
-    (magit-todos-mode))
+(use-package magit-todos
+  :config
+  (magit-todos-mode))
 #+END_SRC
 
 * Projectile
 I use projectile for switching between and navigating projects
 
 #+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :config
-    (setq projectile-globally-ignored-files
-	  (append '("~"
-		    ".swp"
-		    ".pyc")
-		  projectile-globally-ignored-files))
-    (projectile-mode)
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+(use-package projectile
+  :config
+  (setq projectile-globally-ignored-files
+	(append '("~"
+		  ".swp"
+		  ".pyc")
+		projectile-globally-ignored-files))
+  (projectile-mode)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
-  (use-package helm-projectile
-    :config
-    (helm-projectile-on))
+(use-package helm-projectile
+  :config
+  (helm-projectile-on))
 #+END_SRC
 
 * Line numbers
@@ -590,28 +607,28 @@ relative numbers. If I hit 'æ' again it turns
 all line numbers off.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package linum-relative
-    :config
-    (setq linum-relative-mode nil)
-    (define-key evil-normal-state-map (kbd "h") (lambda ()
-						  (interactive)
-						  (if (and linum-mode (not linum-relative-mode))
-						      (linum-mode -1)
+(use-package linum-relative
+  :config
+  (setq linum-relative-mode nil)
+  (define-key evil-normal-state-map (kbd "h") (lambda ()
+						(interactive)
+						(if (and linum-mode (not linum-relative-mode))
+						    (linum-mode -1)
+						  (progn
+						    (linum-relative-off)
+						    (linum-mode 1)
+						    (setq linum-relative-mode nil)))))
+  (define-key evil-normal-state-map (kbd "æ") (lambda ()
+						(interactive)
+						(if (and linum-mode linum-relative-mode)
 						    (progn
 						      (linum-relative-off)
-						      (linum-mode 1)
-						      (setq linum-relative-mode nil)))))
-    (define-key evil-normal-state-map (kbd "æ") (lambda ()
-						  (interactive)
-						  (if (and linum-mode linum-relative-mode)
-						      (progn
-							(linum-relative-off)
-							(linum-mode -1)
-							(setq linum-relative-mode nil))
-						    (progn
-						      (linum-mode 1)
-						      (linum-relative-on)
-						      (setq linum-relative-mode t))))))
+						      (linum-mode -1)
+						      (setq linum-relative-mode nil))
+						  (progn
+						    (linum-mode 1)
+						    (linum-relative-on)
+						    (setq linum-relative-mode t))))))
 #+END_SRC
 
 * Autosaves and backups
@@ -619,39 +636,39 @@ I prefer putting all autosaves and backups in one directory,
 so they don't clutter up my projects.
 
 #+BEGIN_SRC emacs-lisp
-  (defconst emacs-saves-dir "~/tmp/emacs")
-  (setq backup-directory-alist
-	`((".*" . ,emacs-saves-dir)))
-  (setq auto-save-file-name-transforms
-	`((".*" ,emacs-saves-dir t)))
+(defconst emacs-saves-dir "~/tmp/emacs")
+(setq backup-directory-alist
+      `((".*" . ,emacs-saves-dir)))
+(setq auto-save-file-name-transforms
+      `((".*" ,emacs-saves-dir t)))
 #+END_SRC
 
 * Flycheck
 #+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :config
-    (global-flycheck-mode))
+(use-package flycheck
+  :config
+  (global-flycheck-mode))
 
-  (use-package flycheck-inline
-    :config
-    (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+(use-package flycheck-inline
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
 #+END_SRC
 
 * Autocomplete
 #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :config
-    (add-hook 'after-init-hook 'global-company-mode)
-    (setq company-idle-delay 0)
-    (let ((bg (face-attribute 'default :background)))
-      (custom-set-faces
-       '(company-tooltip ((t (:background "#cccccc" :foreground "black"))))
-       '(company-scrollbar-bg ((t (:background "#999999"))))
-       '(company-scrollbar-fg ((t (:background "#555555")))))))
+(use-package company
+  :config
+  (add-hook 'after-init-hook 'global-company-mode)
+  (setq company-idle-delay 0)
+  (let ((bg (face-attribute 'default :background)))
+    (custom-set-faces
+     '(company-tooltip ((t (:background "#cccccc" :foreground "black"))))
+     '(company-scrollbar-bg ((t (:background "#999999"))))
+     '(company-scrollbar-fg ((t (:background "#555555")))))))
 
-  ;(use-package auto-complete
-  ;  :init
-  ;  (global-auto-complete-mode))
+					;(use-package auto-complete
+					;  :init
+					;  (global-auto-complete-mode))
 #+END_SRC
 
 * Programming languages
@@ -662,159 +679,159 @@ so they don't clutter up my projects.
 Set HTML indentation to 4 spaces by default.
 
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'html-mode-hook
-     (lambda ()
-       (set (make-local-variable 'sgml-basic-offset) 4)))
+(add-hook 'html-mode-hook
+	  (lambda ()
+	    (set (make-local-variable 'sgml-basic-offset) 4)))
 #+END_SRC
 *** PHP
 
 #+BEGIN_SRC emacs-lisp
-  (use-package php-mode)
+(use-package php-mode)
 #+END_SRC
 
 ** Python
 
 #+BEGIN_SRC emacs-lisp
-  (use-package virtualenvwrapper
-    :config
-    (venv-initialize-interactive-shells)
-    (setq venv-location "~/env/"))
+(use-package virtualenvwrapper
+  :config
+  (venv-initialize-interactive-shells)
+  (setq venv-location "~/env/"))
 
-  (use-package auto-virtualenvwrapper
-    :init
-    (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate))
+(use-package auto-virtualenvwrapper
+  :init
+  (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate))
 
-  (defun jedi-python-mode-hook ()
-    (add-to-list 'company-backends 'company-jedi))
+(defun jedi-python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
 
-  (use-package company-jedi
-    :init
-    (add-hook 'python-mode-hook 'jedi-python-mode-hook))
+(use-package company-jedi
+  :init
+  (add-hook 'python-mode-hook 'jedi-python-mode-hook))
 
-  ;(use-package company-anaconda
-  ;  :init
-  ;  (add-to-list 'company-backends 'company-anaconda)
-  ;  (add-hook 'python-mode-hook 'anaconda-mode))
+					;(use-package company-anaconda
+					;  :init
+					;  (add-to-list 'company-backends 'company-anaconda)
+					;  (add-hook 'python-mode-hook 'anaconda-mode))
 
-  ;(require 'django-html-mode)
-  ;(use-package django-mode)
+					;(require 'django-html-mode)
+					;(use-package django-mode)
 #+END_SRC
 
 ** C/C++
 
 #+BEGIN_SRC emacs-lisp
-    (use-package irony
-      :config
-      (add-hook 'c++-mode-hook 'irony-mode)
-      (add-hook 'c-mode-hook 'irony-mode)
-      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+(use-package irony
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-    (use-package flycheck-irony
-      :config
-      (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+(use-package flycheck-irony
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
-    (use-package company-irony-c-headers
-      :config
-      (eval-after-load 'company
-	'(add-to-list 'company-backends 'company-irony-c-headers)))
+(use-package company-irony-c-headers
+  :config
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony-c-headers)))
 
-    (use-package company-irony
-      :config
-      (eval-after-load 'company
-	'(add-to-list 'company-backends 'company-irony)))
+(use-package company-irony
+  :config
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony)))
 
-    (use-package cmake-mode)
+(use-package cmake-mode)
 
-    (setq-default c-default-style "linux"
-		  c-basic-offset 4
-		  indent-tabs-mode t)
+(setq-default c-default-style "linux"
+	      c-basic-offset 4
+	      indent-tabs-mode t)
 #+END_SRC
 
 ** ASM
 
 #+BEGIN_SRC emacs-lisp
-  (defun custom-asm-mode-setup ()
-      (define-key asm-mode-map (kbd "C-j") nil))
+(defun custom-asm-mode-setup ()
+  (define-key asm-mode-map (kbd "C-j") nil))
 
-  (add-hook 'asm-mode-hook 'custom-asm-mode-setup)
+(add-hook 'asm-mode-hook 'custom-asm-mode-setup)
 #+END_SRC
 
 ** Rust
 
 #+BEGIN_SRC emacs-lisp
-  (use-package rust-mode)
+(use-package rust-mode)
 
-  (use-package flycheck-rust
-    :config
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+(use-package flycheck-rust
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
 * HideShow
 Collapses code blocks.
 
 #+BEGIN_SRC emacs-lisp
-  (defun toggle-selective-display (column)
-    (interactive "P")
-    (set-selective-display
-     (or column
-	 (unless selective-display
-	   (1+ (current-column))))))
+(defun toggle-selective-display (column)
+  (interactive "P")
+  (set-selective-display
+   (or column
+       (unless selective-display
+	 (1+ (current-column))))))
 
-  (defun toggle-hiding (column)
-    (interactive "P")
-    (if hs-minor-mode
-	(if (condition-case nil
-		(hs-toggle-hiding)
-	      (error t))
-	    (hs-show-all))
-      (toggle-selective-display column)))
+(defun toggle-hiding (column)
+  (interactive "P")
+  (if hs-minor-mode
+      (if (condition-case nil
+	      (hs-toggle-hiding)
+	    (error t))
+	  (hs-show-all))
+    (toggle-selective-display column)))
 
-  (load-library "hideshow")
-  (define-key evil-motion-state-map (kbd "C-M-i") 'toggle-hiding)
+(load-library "hideshow")
+(define-key evil-motion-state-map (kbd "C-M-i") 'toggle-hiding)
 
-  (add-hook 'c-mode-common-hook 'hs-minor-mode)
-  (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
-  (add-hook 'lisp-mode-hook 'hs-minor-mode)
-  (add-hook 'java-mode-hook 'hs-minor-mode)
-  (add-hook 'sh-mode-hook 'hs-minor-mode)
-  (add-hook 'html-mode-hook 'hs-minor-mode)
+(add-hook 'c-mode-common-hook 'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'lisp-mode-hook 'hs-minor-mode)
+(add-hook 'java-mode-hook 'hs-minor-mode)
+(add-hook 'sh-mode-hook 'hs-minor-mode)
+(add-hook 'html-mode-hook 'hs-minor-mode)
 #+END_SRC
 
 * Yasnippet
 #+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :bind (("C-c y c" . yas-new-snippet)
-	   ("C-c y i" . yas-insert-snippet))
-    :init
-    (setq yas-snippet-dirs
-	  (list (concat
-		 (file-name-directory (or load-file-name buffer-file-name))
-		 "snippets")))
-    (yas-global-mode 1))
+(use-package yasnippet
+  :bind (("C-c y c" . yas-new-snippet)
+	 ("C-c y i" . yas-insert-snippet))
+  :init
+  (setq yas-snippet-dirs
+	(list (concat
+	       (file-name-directory (or load-file-name buffer-file-name))
+	       "snippets")))
+  (yas-global-mode 1))
 #+END_SRC
 
 * Minor packages
 #+BEGIN_SRC emacs-lisp
-  (use-package smartparens
-    :demand
-    :bind (("M-j" . sp-forward-barf-sexp)
-	   ("M-ø" . sp-forward-slurp-sexp)
-	   ("M-l" . sp-backward-bard-sexp)
-	   ("M-k" . sp-backward-slurp-sexp))
-    :config
-    (require 'smartparens-config)
-    (smartparens-global-mode)
-    (show-smartparens-global-mode)
-    ; Automatic newline when pressing enter between parens
-    (sp-local-pair 'c-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
-    (sp-local-pair 'c++-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
+(use-package smartparens
+  :demand
+  :bind (("M-j" . sp-forward-barf-sexp)
+	 ("M-ø" . sp-forward-slurp-sexp)
+	 ("M-l" . sp-backward-bard-sexp)
+	 ("M-k" . sp-backward-slurp-sexp))
+  :config
+  (require 'smartparens-config)
+  (smartparens-global-mode)
+  (show-smartparens-global-mode)
+					; Automatic newline when pressing enter between parens
+  (sp-local-pair 'c-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair 'c++-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
 
-  (use-package dumb-jump
-    :bind (:map evil-normal-state-map
-	   ("g d" . dumb-jump-go)
-	   ("g b" . dumb-jump-back)
-	   ("g i" . dumb-jump-quick-look))
-    :config
-    (dumb-jump-mode))
+(use-package dumb-jump
+  :bind (:map evil-normal-state-map
+	      ("g d" . dumb-jump-go)
+	      ("g b" . dumb-jump-back)
+	      ("g i" . dumb-jump-quick-look))
+  :config
+  (dumb-jump-mode))
 #+END_SRC
 
 * Local packages
@@ -822,42 +839,42 @@ As local packages will vary between computers, the loading is not comitted to gi
 Instead, it's loaded in another file that is ignored in git.
 
 #+BEGIN_SRC emacs-lisp
-  (let ((local-packages (concat (file-name-directory (or load-file-name buffer-file-name)) "local_packages.el")))
-    (when (file-exists-p local-packages)
-      (load-file local-packages)))
+(let ((local-packages (concat (file-name-directory (or load-file-name buffer-file-name)) "local_packages.el")))
+  (when (file-exists-p local-packages)
+    (load-file local-packages)))
 #+END_SRC
 
 * Custom functions
 ** Edit this config
 #+BEGIN_SRC emacs-lisp
-  ;; Get the filepath when the code is first executed.
-  ;; The code is moved to a .el file of the same name
-  ;; as this file when it is executed, so we must replace
-  ;; the file extension to gen the right file
-  (setq config-file-path (replace-regexp-in-string
-			  "\\.el$"
-			  ".org"
-			  (or load-file-name buffer-file-name)))
+;; Get the filepath when the code is first executed.
+;; The code is moved to a .el file of the same name
+;; as this file when it is executed, so we must replace
+;; the file extension to gen the right file
+(setq config-file-path (replace-regexp-in-string
+			"\\.el$"
+			".org"
+			(or load-file-name buffer-file-name)))
 
-  (defun edit-config ()
-    "Open this config file in a new buffer."
-    (interactive)
-    (find-file config-file-path))
+(defun edit-config ()
+  "Open this config file in a new buffer."
+  (interactive)
+  (find-file config-file-path))
 #+END_SRC
 
 ** Create org src block and open in new buffer
 #+BEGIN_SRC emacs-lisp
-  (defun org-src-create-and-open (lang)
-    "Create a src block for the language the user types in, and open it in a new buffer."
-    (interactive
-      (list (read-string "Programming language (emacs-lisp): ")))
-    (when (equal lang "")
-      (setq lang "emacs-lisp"))
-    (insert (format "#+BEGIN_SRC %s\n\n#+END_SRC" lang))
-    (previous-line)
-    (org-edit-src-code))
+(defun org-src-create-and-open (lang)
+  "Create a src block for the language the user types in, and open it in a new buffer."
+  (interactive
+   (list (read-string "Programming language (emacs-lisp): ")))
+  (when (equal lang "")
+    (setq lang "emacs-lisp"))
+  (insert (format "#+BEGIN_SRC %s\n\n#+END_SRC" lang))
+  (previous-line)
+  (org-edit-src-code))
 
-  (define-key org-mode-map (kbd "C-c b") 'org-src-create-and-open)
+(define-key org-mode-map (kbd "C-c b") 'org-src-create-and-open)
 #+END_SRC
 
 ** Ert tests
@@ -869,7 +886,7 @@ Run tests from tests.el, or all tests in tests/, interactively.
 * Hooks
 ** Delete trailing whitespace when saving
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
 
 * Keybindings
@@ -896,6 +913,6 @@ defined together with those functions.
 
 ** Font size
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-+") 'text-scale-increase)
-  (global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
 #+END_SRC
