@@ -3,7 +3,7 @@
 #+EMAIL: sindre@sindrestephansen.com
 #+LANGUAGE: en
 #+LINK_HOME: http://sindrestephansen.com
-#+STARTUP: indent
+#+STARTUP: indent overview
 
 This is my configuration file for emacs (exported as twitter bootstrap html),
 the source of which can be found [[http://github.com/kalkins/emacs-config][here]]. The config is written using org mode,
@@ -80,14 +80,15 @@ Add extra package providers.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 #+END_SRC
 
 Initialize Package.el, and make sure use-package is installed
 
 #+BEGIN_SRC emacs-lisp
 (package-initialize)
-(package-refresh-contents)
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
 #+END_SRC
@@ -101,12 +102,500 @@ Automatically download required packages.
 (setq use-package-always-ensure t)
 #+END_SRC
 
+** Package update
+
+#+BEGIN_SRC emacs-lisp
+(use-package auto-package-update
+  :config
+  (setq auto-package-update-interval 7
+        auto-package-update-prompt-before-update t
+        auto-package-update-delete-old-versions t)
+  (auto-package-update-maybe))
+#+END_SRC
+* Display
+** Powerline
+#+BEGIN_SRC emacs-lisp
+(use-package powerline
+  :config
+  (powerline-center-evil-theme))
+#+END_SRC
+
+* Alarm bell
+Emacs sometimes makes an annoying bell sound. This replaces that with
+a visible cue.
+
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function
+      (lambda ()
+	(let ((orig-fg (face-foreground 'mode-line)))
+	  (set-face-foreground 'mode-line "#F2804F")
+	  (run-with-idle-timer 0.1 nil
+			       (lambda (fg) (set-face-foreground 'mode-line fg))
+			       orig-fg))))
+#+END_SRC
+
+* Search
+** Helm
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  :bind (("M-x" . helm-M-x)
+	 ("C-x r b" . helm-filtered-bookmarks)
+	 ("C-x C-f" . helm-find-files)
+	 ("C-f" . helm-find))
+  :config
+  (helm-mode 1))
+#+END_SRC
+* Evil mode
+** Install
+This package adds vim-like navigation to emacs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :init
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode 1))
+#+END_SRC
+
+** Keybinding
+I prefer to use jklø for navigation instead of hjkl.
+
+#+BEGIN_SRC emacs-lisp
+(evil-global-set-key 'motion (kbd "j") 'evil-backward-char)
+(evil-global-set-key 'motion (kbd "k") 'evil-next-line)
+(evil-global-set-key 'motion (kbd "l") 'evil-previous-line)
+(evil-global-set-key 'motion (kbd "ø") 'evil-forward-char)
+					; For some reason ø is M-c in sudoedit/terminal mode
+					; TODO: This works, but sets a C-u count to 8, meaning that
+					; the next command is executed 8 times
+(evil-global-set-key 'motion (kbd "M-c") 'evil-forward-char)
+#+END_SRC
+
+I like to insert blank newlines with RET in normal mode.
+
+#+BEGIN_SRC emacs-lisp
+(define-key evil-normal-state-map (kbd "RET") (lambda ()
+						(interactive)
+						(next-line)
+						(beginning-of-line)
+						(newline)
+						(previous-line)))
+#+END_SRC
+
+Don't remap undo buttons in visual mode.
+
+#+BEGIN_SRC emacs-lisp
+(define-key evil-visual-state-map (kbd "u") 'undo-tree-undo)
+(define-key evil-visual-state-map (kbd "C-r") 'undo-tree-redo)
+#+END_SRC
+
+Disable some keys, so they can be used for other stuff later.
+
+#+BEGIN_SRC emacs-lisp
+(define-key evil-motion-state-map (kbd "C-f") nil)
+#+END_SRC
+
+** Evil collection
+The evil collection adds bindings for several modes not covered by evil.
+
+#+BEGIN_SRC emacs-lisp
+(defun jklø-evil-collection (_mode mode-keymaps &rest _rest)
+  (evil-collection-translate-key 'motion mode-keymaps
+    "k" "j"
+    "l" "k"
+    "ø" "l"))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (add-hook 'evil-collection-setup-hook #'jklø-evil-collection)
+  (evil-collection-init))
+#+END_SRC
+
+* PDF tools
+Use PDF tools instead of the default DocView.
+
+#+BEGIN_SRC emacs-lisp
+(defun pdf-view-goto-page-or-first (count)
+  "Goto page COUNT.
+  If COUNT is not supplied, go to the first page."
+  (interactive "P")
+  (if count
+      (pdf-view-goto-page count)
+    (pdf-view-first-page)))
+
+(defun pdf-view-goto-page-or-last (count)
+  "Goto page COUNT.
+  If COUNT is not supplied, go to the last page."
+  (interactive "P")
+  (if count
+      (pdf-view-goto-page count)
+    (pdf-view-last-page)))
+
+(use-package pdf-tools
+  :mode "\\.pdf\\'"
+  :interpreter "pdf"
+  :bind (:map pdf-view-mode-map
+	      ("j"   . pdf-view-previous-page-command)
+	      ("k"   . (lambda () (interactive) (pdf-view-next-line-or-next-page 5)))
+	      ("l"   . (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5)))
+	      ("ø"   . pdf-view-next-page-command)
+	      ("g"   . pdf-view-goto-page-or-first)
+	      ("G"   . pdf-view-goto-page-or-last)
+	      ("C-o" . pdf-history-backward)
+	      ("C-i" . pdf-history-forward)
+	      ("m"   . pdf-view-position-to-register)
+	      ("'"   . pdf-view-jump-to-register)
+	      ("/"   . pdf-occur)
+	      ("o"   . pdf-outline)
+	      ("f"   . pdf-links-action-perform)
+	      ("b"   . pdf-view-midnight-minor-mode)
+	      ("l"   . pdf-view-next-page-command))
+  :config
+  (pdf-tools-install))
+#+END_SRC
+
+* Git
+** Smerge
+#+BEGIN_SRC emacs-lisp
+(setq smerge-command-prefix (kbd "C-c m"))
+#+END_SRC
+
+** Magit
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :bind ("M-m" . magit-status))
+#+END_SRC
+
+** Magit-todos
+#+BEGIN_SRC emacs-lisp
+(use-package magit-todos
+  :config
+  (magit-todos-mode))
+#+END_SRC
+
+* Projectile
+I use projectile for switching between and navigating projects
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :config
+  (setq projectile-globally-ignored-files
+	(append '("~"
+		  ".swp"
+		  ".pyc")
+		projectile-globally-ignored-files))
+  (projectile-mode)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+(use-package helm-projectile
+  :config
+  (helm-projectile-on))
+#+END_SRC
+
+* Line numbers
+I have line numbers off by default, but I want to
+be able to quickly turn them of and on. I often
+need relative numbers for evil mode commands.
+
+This setup toggles line numbers with 'h', and
+relative numbers with 'æ'. If I hit 'æ' while
+line numbers are toggled, it switched to
+relative numbers. If I hit 'æ' again it turns
+all line numbers off.
+
+#+BEGIN_SRC emacs-lisp
+(use-package linum-relative
+  :config
+  (setq linum-relative-mode nil)
+  (define-key evil-normal-state-map (kbd "h") (lambda ()
+						(interactive)
+						(if (and linum-mode (not linum-relative-mode))
+						    (linum-mode -1)
+						  (progn
+						    (linum-relative-off)
+						    (linum-mode 1)
+						    (setq linum-relative-mode nil)))))
+  (define-key evil-normal-state-map (kbd "æ") (lambda ()
+						(interactive)
+						(if (and linum-mode linum-relative-mode)
+						    (progn
+						      (linum-relative-off)
+						      (linum-mode -1)
+						      (setq linum-relative-mode nil))
+						  (progn
+						    (linum-mode 1)
+						    (linum-relative-on)
+						    (setq linum-relative-mode t))))))
+#+END_SRC
+
+* Autosaves and backups
+I prefer putting all autosaves and backups in one directory,
+so they don't clutter up my projects.
+
+#+BEGIN_SRC emacs-lisp
+(defconst emacs-saves-dir "~/tmp/emacs")
+(setq backup-directory-alist `((".*" . ,emacs-saves-dir))
+      auto-save-file-name-transforms `((".*" ,emacs-saves-dir t))
+      backup-by-copying t
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t
+      make-backup-files nil)
+#+END_SRC
+
+* Flycheck
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :config
+  (global-flycheck-mode))
+
+(use-package flycheck-inline
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+#+END_SRC
+
+* Autocomplete
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :config
+  (add-hook 'after-init-hook 'global-company-mode)
+  (setq company-dabbrev-downcase 0)
+  (setq company-dabbrev-other-buffers t)
+  (setq company-idle-delay 0.5)
+  (let ((bg (face-attribute 'default :background)))
+    (custom-set-faces
+     '(company-tooltip ((t (:background "#cccccc" :foreground "black"))))
+     '(company-scrollbar-bg ((t (:background "#999999"))))
+     '(company-scrollbar-fg ((t (:background "#555555")))))))
+
+					;(use-package auto-complete
+					;  :init
+					;  (global-auto-complete-mode))
+#+END_SRC
+
+* Indentation
+
+#+BEGIN_SRC emacs-lisp
+(use-package smart-tabs-mode
+  :config
+  (smart-tabs-insinuate 'c))
+
+(setq-default indent-tabs-mode nil)
+#+END_SRC
+
+* Programming languages
+** Web development
+*** HTML
+**** Indentation
+
+Set HTML indentation to 4 spaces by default.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'html-mode-hook
+	  (lambda ()
+	    (set (make-local-variable 'sgml-basic-offset) 4)))
+#+END_SRC
+*** PHP
+
+#+BEGIN_SRC emacs-lisp
+(use-package php-mode)
+#+END_SRC
+
+** Python
+*** Virtualenv
+#+BEGIN_SRC emacs-lisp
+(use-package virtualenvwrapper
+  :config
+  (venv-initialize-interactive-shells)
+  (setq venv-location "~/env/"))
+
+(use-package auto-virtualenvwrapper
+  :init
+  (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate))
+#+END_SRC
+
+*** Autocomplete
+#+BEGIN_SRC emacs-lisp
+(defun jedi-python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
+
+(use-package company-jedi
+  :init
+  (add-hook 'python-mode-hook 'jedi-python-mode-hook))
+
+					;(use-package company-anaconda
+					;  :init
+					;  (add-to-list 'company-backends 'company-anaconda)
+					;  (add-hook 'python-mode-hook 'anaconda-mode))
+
+					;(require 'django-html-mode)
+					;(use-package django-mode)
+#+END_SRC
+
+*** Shell
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "--simple-prompt -i")
+#+END_SRC
+** C/C++
+
+#+BEGIN_SRC emacs-lisp
+(use-package irony
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package flycheck-irony
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+(use-package company-irony-c-headers
+  :config
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony-c-headers)))
+
+(use-package company-irony
+  :config
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony)))
+
+(use-package cmake-mode)
+
+(setq-default c-default-style "linux"
+	      c-basic-offset 4)
+
+(add-hook 'c-mode-common-hook
+	  (lambda () (setq indent-tabs-mode t)))
+#+END_SRC
+
+** ASM
+
+#+BEGIN_SRC emacs-lisp
+(evil-define-key nil asm-mode-map (kbd "C-j") nil)
+#+END_SRC
+
+** Rust
+
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode)
+
+(use-package flycheck-rust
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+#+END_SRC
+** Javascript
+#+BEGIN_SRC emacs-lisp
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+
+(use-package tide
+  :config
+  (setq company-tooltip-align-annotations t)
+  (add-hook 'js-mode-hook #'setup-tide-mode))
+#+END_SRC
+** Latex
+*** AucTex
+#+BEGIN_SRC emacs-lisp
+(use-package tex
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil))
+
+(use-package company-auctex)
+#+END_SRC
+
+*** Configure texmathp
+Texmathp is a tool that can tell if the cursor is in a math environment or not
+However, its definition of math environment is quite small, so I add a few here.
+
+#+BEGIN_SRC emacs-lisp
+(setq texmathp-tex-commands '(("equation*" env-on)
+                              ("align" env-on)
+                              ("align*" env-on)))
+#+END_SRC
+
+*** Biblatex
+Configure bibtex mode to use biblatex.
+
+#+BEGIN_SRC emacs-lisp
+(setq bibtex-dialect 'biblatex)
+#+END_SRC
+
+* HideShow
+Collapses code blocks.
+
+#+BEGIN_SRC emacs-lisp
+(defun toggle-selective-display (column)
+  (interactive "P")
+  (set-selective-display
+   (or column
+       (unless selective-display
+	 (1+ (current-column))))))
+
+(defun toggle-hiding (column)
+  (interactive "P")
+  (if hs-minor-mode
+      (if (condition-case nil
+	      (hs-toggle-hiding)
+	    (error t))
+	  (hs-show-all))
+    (toggle-selective-display column)))
+
+(load-library "hideshow")
+(define-key evil-motion-state-map (kbd "C-M-i") 'toggle-hiding)
+
+(add-hook 'c-mode-common-hook 'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'lisp-mode-hook 'hs-minor-mode)
+(add-hook 'java-mode-hook 'hs-minor-mode)
+(add-hook 'sh-mode-hook 'hs-minor-mode)
+(add-hook 'html-mode-hook 'hs-minor-mode)
+#+END_SRC
+
+* Yasnippet
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :bind (("C-c y c" . yas-new-snippet)
+	 ("C-c y i" . yas-insert-snippet))
+  :init
+  (setq yas-snippet-dirs
+	(list (concat
+	       (file-name-directory (or load-file-name buffer-file-name))
+	       "snippets")))
+  (yas-global-mode 1))
+#+END_SRC
+
 * Org Mode
+** Install
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :ensure org-plus-contrib
+  :bind (:map org-mode-map
+         ("RET" . (lambda () (interactive) (org-return t)))
+         ("C-c l" . org-store-link))
+  :config
+  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle))
+  ;(unbind-key "C-j" org-mode-map)
+  ;(unbind-key "C-k" org-mode-map))
+#+END_SRC
+
 ** Bullets
 Use pretty bullets instead of asterisks in headings.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-bullets
+  :after org
   :config
   (add-hook 'org-mode-hook
 	    (lambda () (org-bullets-mode t))))
@@ -115,7 +604,30 @@ Use pretty bullets instead of asterisks in headings.
 Only use one indented bullet per heading.
 
 #+BEGIN_SRC emacs-lisp
-(setq org-hide-leading-stars t)
+;(setq org-hide-leading-stars t)
+#+END_SRC
+
+** Ignore headlines
+This allows headlines to be ignored, while including their content, by
+marking them with the :ignore: tag.
+
+#+BEGIN_SRC emacs-lisp
+;(ox-extras-activate '(ignore-headlines))
+#+END_SRC
+
+** Grammar check
+#+BEGIN_SRC emacs-lisp
+(require 'langtool)
+(use-package langtool
+  :init
+  (setq langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*"))
+#+END_SRC
+
+** Indent mode
+Use indent-mode by default (indent text to match bullets)
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
 
 ** Source code blocks
@@ -140,11 +652,44 @@ Keybinding for editing src blocks.
 (define-key org-mode-map (kbd "C-c e") 'org-edit-src-code)
 #+END_SRC
 
-** Inline latex
-Make inline latex bigger, so it's easier to read.
+** Latex
+*** Biblatex
+To properly include bibliography processesing, the latex command has to be modified.
+
+Note that this requires biber to be installed.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-latex-pdf-process
+  '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode -output-directory %o' -pdf -bibtex -f %f"))
+#+END_SRC
+
+*** Helper modes
+This mode works together with AUCtex to make latex entry easier.
+
+#+BEGIN_SRC emacs-lisp
+(use-package cdlatex)
+#+END_SRC
+
+*** Preview size
+Make inline latex previews bigger, so it's easier to read.
 
 #+BEGIN_SRC emacs-lisp
 (plist-put org-format-latex-options :scale 1.5)
+#+END_SRC
+*** Syntax highlight
+#+BEGIN_SRC emacs-lisp
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+(setq org-src-fontify-natively t)
+#+END_SRC
+** References
+#+BEGIN_SRC emacs-lisp
+(use-package org-ref
+  :config
+  (setq org-ref-bibliography-notes "~/Nextcloud/Dokumenter/bibliography/notes.org"
+        org-ref-default-bibliography '("~/Nextcloud/Dokumenter/bibliography/references.bib")
+        org-ref-pdf-directory "~/Nextcloud/Dokumenter/bibliography/bibtex-pdfs"))
 #+END_SRC
 
 ** Inline youtube links
@@ -371,22 +916,6 @@ Requires the youtube package above.
  :image-data-fun #'org-image-link)
 #+END_SRC
 
-** Keybindings
-Set return (or enter) to indent by default.
-
-#+BEGIN_SRC emacs-lisp
-(define-key org-mode-map (kbd "RET") (lambda ()
-				       (interactive)
-				       (org-return t)))
-#+END_SRC
-
-Disable org bindings that are used for other stuff.
-
-#+BEGIN_SRC emacs-lisp
-(define-key org-mode-map (kbd "C-j") nil)
-(define-key org-mode-map (kbd "C-k") nil)
-#+END_SRC
-
 ** Export
 Org export extensions.
 
@@ -397,416 +926,6 @@ Org export extensions.
 (use-package ox-twbs)
 ;; Syntax highlighting in exported html
 (use-package htmlize)
-#+END_SRC
-
-* Display
-** Powerline
-#+BEGIN_SRC emacs-lisp
-(use-package powerline
-  :config
-  (powerline-center-evil-theme))
-#+END_SRC
-
-* Alarm bell
-Emacs sometimes makes an annoying bell sound. This replaces that with
-a visible cue.
-
-#+BEGIN_SRC emacs-lisp
-(setq ring-bell-function
-      (lambda ()
-	(let ((orig-fg (face-foreground 'mode-line)))
-	  (set-face-foreground 'mode-line "#F2804F")
-	  (run-with-idle-timer 0.1 nil
-			       (lambda (fg) (set-face-foreground 'mode-line fg))
-			       orig-fg))))
-#+END_SRC
-
-* Search
-** Helm
-#+BEGIN_SRC emacs-lisp
-(use-package helm
-  :bind (("M-x" . helm-M-x)
-	 ("C-x r b" . helm-filtered-bookmarks)
-	 ("C-x C-f" . helm-find-files)
-	 ("C-f" . helm-find))
-  :config
-  (helm-mode 1))
-#+END_SRC
-* Evil mode
-This package adds vim-like navigation to emacs.
-
-#+BEGIN_SRC emacs-lisp
-(use-package evil
-  :config
-  (evil-mode 1))
-#+END_SRC
-
-I prefer to use jklø for navigation instead of hjkl.
-
-#+BEGIN_SRC emacs-lisp
-(define-key evil-motion-state-map (kbd "j") 'evil-backward-char)
-(define-key evil-motion-state-map (kbd "k") 'evil-next-line)
-(define-key evil-motion-state-map (kbd "l") 'evil-previous-line)
-(define-key evil-motion-state-map (kbd "ø") 'evil-forward-char)
-					; For some reason ø is M-c in sudoedit/terminal mode
-					; TODO: This works, but sets a C-u count to 8, meaning that
-					; the next command is executed 8 times
-(define-key evil-motion-state-map (kbd "M-c") 'evil-forward-char)
-#+END_SRC
-
-I like to insert blank newlines with RET in normal mode.
-
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map (kbd "RET") (lambda ()
-						(interactive)
-						(next-line)
-						(beginning-of-line)
-						(newline)
-						(previous-line)))
-#+END_SRC
-
-Don't remap undo buttons in visual mode.
-
-#+BEGIN_SRC emacs-lisp
-(define-key evil-visual-state-map (kbd "u") 'undo-tree-undo)
-(define-key evil-visual-state-map (kbd "C-r") 'undo-tree-redo)
-#+END_SRC
-
-Disable some keys, so they can be used for other stuff later.
-
-#+BEGIN_SRC emacs-lisp
-(define-key evil-motion-state-map (kbd "C-f") nil)
-#+END_SRC
-* PDF tools
-Use PDF tools instead of the default DocView.
-
-#+BEGIN_SRC emacs-lisp
-(defun pdf-view-goto-page-or-first (count)
-  "Goto page COUNT.
-  If COUNT is not supplied, go to the first page."
-  (interactive "P")
-  (if count
-      (pdf-view-goto-page count)
-    (pdf-view-first-page)))
-
-(defun pdf-view-goto-page-or-last (count)
-  "Goto page COUNT.
-  If COUNT is not supplied, go to the last page."
-  (interactive "P")
-  (if count
-      (pdf-view-goto-page count)
-    (pdf-view-last-page)))
-
-(use-package pdf-tools
-  :mode "\\.pdf\\'"
-  :interpreter "pdf"
-  :bind (:map pdf-view-mode-map
-	      ("j"   . pdf-view-previous-page-command)
-	      ("k"   . (lambda () (interactive) (pdf-view-next-line-or-next-page 5)))
-	      ("l"   . (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5)))
-	      ("ø"   . pdf-view-next-page-command)
-	      ("g"   . pdf-view-goto-page-or-first)
-	      ("G"   . pdf-view-goto-page-or-last)
-	      ("C-o" . pdf-history-backward)
-	      ("C-i" . pdf-history-forward)
-	      ("m"   . pdf-view-position-to-register)
-	      ("'"   . pdf-view-jump-to-register)
-	      ("/"   . pdf-occur)
-	      ("o"   . pdf-outline)
-	      ("f"   . pdf-links-action-perform)
-	      ("b"   . pdf-view-midnight-minor-mode)
-	      ("l"   . pdf-view-next-page-command))
-  :config
-  (pdf-tools-install))
-
-					;  (evil-make-overriding-map pdf-view-mode-map 'normal)
-					;  (evil-define-key 'normal pdf-view-mode-map
-					;    "j" 'pdf-view-previous-page-command
-					;    "k" (lambda () (interactive) (pdf-view-next-line-or-next-page 5))
-					;    "l" (lambda () (interactive) (pdf-view-previous-line-or-previous-page 5))
-					;    "ø" 'pdf-view-first-page
-					;    "G" 'pdf-view-last-page
-					;    (kbd "C-o") 'pdf-history-backward
-					;    (kbd "C-i") 'pdf-history-forward
-					;    "m" 'pdf-view-position-to-register
-					;    "'" 'pdf-view-jump-to-register
-					;    "/" 'pdf-occur
-					;    "o" 'pdf-outline
-					;    "f" 'pdf-links-action-perform
-					;    "b" 'pdf-view-midnight-minor-mode  "l" 'pdf-view-next-page-command))
-#+END_SRC
-
-* Git
-** Smerge
-#+BEGIN_SRC emacs-lisp
-(setq smerge-command-prefix (kbd "C-c m"))
-#+END_SRC
-
-** Magit
-#+BEGIN_SRC emacs-lisp
-(use-package magit
-  :bind ("M-m" . magit-status))
-#+END_SRC
-
-** Evil-magit
-This package allows some vim navigation bindings to
-be used in the magit buffer. It uses default vim bindings,
-so I have to remap them to use jklø.
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package evil-magit
-  :init
-  (setq evil-magit-state 'normal)
-  (setq evil-magit-use-y-for-yank nil)
-  :config
-  (evil-define-key evil-magit-state magit-mode-map "j" 'magit-log-popup)
-  (evil-define-key evil-magit-state magit-mode-map "k" 'evil-next-visual-line)
-  (evil-define-key evil-magit-state magit-mode-map "l" 'evil-previous-visual-line)
-  (evil-define-key evil-magit-state magit-mode-map (kbd "C-k") 'magit-section-forward)
-  (evil-define-key evil-magit-state magit-mode-map (kbd "C-l") 'magit-section-backward)
-  (evil-define-key evil-magit-state magit-mode-map (kbd "C-j") 'windmove-left)
-  (evil-define-key evil-magit-state magit-mode-map (kbd "C-ø") 'windmove-right))
-#+END_SRC
-
-** Magit-todos
-#+BEGIN_SRC emacs-lisp
-(use-package magit-todos
-  :config
-  (magit-todos-mode))
-#+END_SRC
-
-* Projectile
-I use projectile for switching between and navigating projects
-
-#+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :config
-  (setq projectile-globally-ignored-files
-	(append '("~"
-		  ".swp"
-		  ".pyc")
-		projectile-globally-ignored-files))
-  (projectile-mode)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-
-(use-package helm-projectile
-  :config
-  (helm-projectile-on))
-#+END_SRC
-
-* Line numbers
-I have line numbers off by default, but I want to
-be able to quickly turn them of and on. I often
-need relative numbers for evil mode commands.
-
-This setup toggles line numbers with 'h', and
-relative numbers with 'æ'. If I hit 'æ' while
-line numbers are toggled, it switched to
-relative numbers. If I hit 'æ' again it turns
-all line numbers off.
-
-#+BEGIN_SRC emacs-lisp
-(use-package linum-relative
-  :config
-  (setq linum-relative-mode nil)
-  (define-key evil-normal-state-map (kbd "h") (lambda ()
-						(interactive)
-						(if (and linum-mode (not linum-relative-mode))
-						    (linum-mode -1)
-						  (progn
-						    (linum-relative-off)
-						    (linum-mode 1)
-						    (setq linum-relative-mode nil)))))
-  (define-key evil-normal-state-map (kbd "æ") (lambda ()
-						(interactive)
-						(if (and linum-mode linum-relative-mode)
-						    (progn
-						      (linum-relative-off)
-						      (linum-mode -1)
-						      (setq linum-relative-mode nil))
-						  (progn
-						    (linum-mode 1)
-						    (linum-relative-on)
-						    (setq linum-relative-mode t))))))
-#+END_SRC
-
-* Autosaves and backups
-I prefer putting all autosaves and backups in one directory,
-so they don't clutter up my projects.
-
-#+BEGIN_SRC emacs-lisp
-(defconst emacs-saves-dir "~/tmp/emacs")
-(setq backup-directory-alist
-      `((".*" . ,emacs-saves-dir)))
-(setq auto-save-file-name-transforms
-      `((".*" ,emacs-saves-dir t)))
-#+END_SRC
-
-* Flycheck
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :config
-  (global-flycheck-mode))
-
-(use-package flycheck-inline
-  :config
-  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
-#+END_SRC
-
-* Autocomplete
-#+BEGIN_SRC emacs-lisp
-(use-package company
-  :config
-  (add-hook 'after-init-hook 'global-company-mode)
-  (setq company-idle-delay 0)
-  (let ((bg (face-attribute 'default :background)))
-    (custom-set-faces
-     '(company-tooltip ((t (:background "#cccccc" :foreground "black"))))
-     '(company-scrollbar-bg ((t (:background "#999999"))))
-     '(company-scrollbar-fg ((t (:background "#555555")))))))
-
-					;(use-package auto-complete
-					;  :init
-					;  (global-auto-complete-mode))
-#+END_SRC
-
-* Programming languages
-** Web development
-*** HTML
-**** Indentation
-
-Set HTML indentation to 4 spaces by default.
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'html-mode-hook
-	  (lambda ()
-	    (set (make-local-variable 'sgml-basic-offset) 4)))
-#+END_SRC
-*** PHP
-
-#+BEGIN_SRC emacs-lisp
-(use-package php-mode)
-#+END_SRC
-
-** Python
-
-#+BEGIN_SRC emacs-lisp
-(use-package virtualenvwrapper
-  :config
-  (venv-initialize-interactive-shells)
-  (setq venv-location "~/env/"))
-
-(use-package auto-virtualenvwrapper
-  :init
-  (add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate))
-
-(defun jedi-python-mode-hook ()
-  (add-to-list 'company-backends 'company-jedi))
-
-(use-package company-jedi
-  :init
-  (add-hook 'python-mode-hook 'jedi-python-mode-hook))
-
-					;(use-package company-anaconda
-					;  :init
-					;  (add-to-list 'company-backends 'company-anaconda)
-					;  (add-hook 'python-mode-hook 'anaconda-mode))
-
-					;(require 'django-html-mode)
-					;(use-package django-mode)
-#+END_SRC
-
-** C/C++
-
-#+BEGIN_SRC emacs-lisp
-(use-package irony
-  :config
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-(use-package flycheck-irony
-  :config
-  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
-(use-package company-irony-c-headers
-  :config
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-irony-c-headers)))
-
-(use-package company-irony
-  :config
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-irony)))
-
-(use-package cmake-mode)
-
-(setq-default c-default-style "linux"
-	      c-basic-offset 4
-	      indent-tabs-mode t)
-#+END_SRC
-
-** ASM
-
-#+BEGIN_SRC emacs-lisp
-(defun custom-asm-mode-setup ()
-  (define-key asm-mode-map (kbd "C-j") nil))
-
-(add-hook 'asm-mode-hook 'custom-asm-mode-setup)
-#+END_SRC
-
-** Rust
-
-#+BEGIN_SRC emacs-lisp
-(use-package rust-mode)
-
-(use-package flycheck-rust
-  :config
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-#+END_SRC
-* HideShow
-Collapses code blocks.
-
-#+BEGIN_SRC emacs-lisp
-(defun toggle-selective-display (column)
-  (interactive "P")
-  (set-selective-display
-   (or column
-       (unless selective-display
-	 (1+ (current-column))))))
-
-(defun toggle-hiding (column)
-  (interactive "P")
-  (if hs-minor-mode
-      (if (condition-case nil
-	      (hs-toggle-hiding)
-	    (error t))
-	  (hs-show-all))
-    (toggle-selective-display column)))
-
-(load-library "hideshow")
-(define-key evil-motion-state-map (kbd "C-M-i") 'toggle-hiding)
-
-(add-hook 'c-mode-common-hook 'hs-minor-mode)
-(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
-(add-hook 'lisp-mode-hook 'hs-minor-mode)
-(add-hook 'java-mode-hook 'hs-minor-mode)
-(add-hook 'sh-mode-hook 'hs-minor-mode)
-(add-hook 'html-mode-hook 'hs-minor-mode)
-#+END_SRC
-
-* Yasnippet
-#+BEGIN_SRC emacs-lisp
-(use-package yasnippet
-  :bind (("C-c y c" . yas-new-snippet)
-	 ("C-c y i" . yas-insert-snippet))
-  :init
-  (setq yas-snippet-dirs
-	(list (concat
-	       (file-name-directory (or load-file-name buffer-file-name))
-	       "snippets")))
-  (yas-global-mode 1))
 #+END_SRC
 
 * Minor packages
@@ -883,6 +1002,43 @@ Run tests from tests.el, or all tests in tests/, interactively.
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
 
+** Rename current file
+#+BEGIN_SRC emacs-lisp
+;; Originally from stevey, adapted to support moving to a new directory.
+(defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive
+   (progn
+     (if (not (buffer-file-name))
+         (error "Buffer '%s' is not visiting a file!" (buffer-name)))
+     ;; Disable ido auto merge since it too frequently jumps back to the original
+     ;; file name if you pause while typing. Reenable with C-z C-z in the prompt.
+     (let ((ido-auto-merge-work-directories-length -1))
+       (list (read-file-name (format "Rename %s to: " (file-name-nondirectory
+                                                       (buffer-file-name))))))))
+  (if (equal new-name "")
+      (error "Aborted rename"))
+  (setq new-name (if (file-directory-p new-name)
+                     (expand-file-name (file-name-nondirectory
+                                        (buffer-file-name))
+                                       new-name)
+                   (expand-file-name new-name)))
+  ;; Only rename if the file was saved before. Update the
+  ;; buffer name and visited file in all cases.
+  (if (file-exists-p (buffer-file-name))
+      (rename-file (buffer-file-name) new-name 1))
+  (let ((was-modified (buffer-modified-p)))
+    ;; This also renames the buffer, and works with uniquify
+    (set-visited-file-name new-name)
+    (if was-modified
+        (save-buffer)
+      ;; Clear buffer-modified flag caused by set-visited-file-name
+      (set-buffer-modified-p nil)))
+
+  (setq default-directory (file-name-directory new-name))
+
+  (message "Renamed to %s." new-name))
+#+END_SRC
 * Hooks
 ** Delete trailing whitespace when saving
 #+BEGIN_SRC emacs-lisp
@@ -892,17 +1048,41 @@ Run tests from tests.el, or all tests in tests/, interactively.
 * Keybindings
 Bindings that are spesific to a package are defined together
 with that package.
-Bindings spesific to states the different
+Bindings spesific to the different
 states for evil are defined under [[*Evil mode][Evil mode]].
 Bindings to custom functions in this file are
 defined together with those functions.
 
 ** Move between windows
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-j") 'windmove-left)
-(global-set-key (kbd "C-k") 'windmove-down)
-(global-set-key (kbd "C-l") 'windmove-up)
-(global-set-key (kbd "C-ø") 'windmove-right)
+;(defvar my-win-change-minor-mode-map
+;  (let ((map (make-sparse-keymap)))
+;    (define-key map (kbd "C-j") 'windmove-left)
+;    (define-key map (kbd "C-k") 'windmove-down)
+;    (define-key map (kbd "C-l") 'windmove-up)
+;    (define-key map (kbd "C-ø") 'windmove-right)
+;    map)
+;  "my-win-change-minor-mode keymap.")
+
+(define-minor-mode my-win-change-minor-mode
+  "A minor mode that adds keybindings for moving between windows."
+  :lighter " win-change"
+  :keymap (make-sparse-keymap))
+  ;:init-value t
+
+(evil-define-key 'normal 'my-win-change-minor-mode
+  (kbd "C-j") 'windmove-left
+  (kbd "C-k") 'windmove-down
+  (kbd "C-l") 'windmove-up
+  (kbd "C-ø") 'windmove-right)
+
+(defun my-win-change-minibuffer-hook ()
+  (my-win-change-minor-mode 0))
+
+;(add-hook 'minibuffer-setup-hook 'my-win-change-minibuffer-hook)
+
+;(my-win-change-minor-mode 1)
+(add-hook 'text-mode-hook #'my-win-change-minor-mode)
 #+END_SRC
 
 ** Cycle buffers
