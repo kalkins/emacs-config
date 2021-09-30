@@ -1080,7 +1080,6 @@ defined together with those functions.
   "A minor mode that adds keybindings for moving between windows."
   :lighter " win-change"
   :keymap (make-sparse-keymap))
-  ;:init-value t
 
 (evil-define-key 'normal 'my-win-change-minor-mode
   (kbd "C-j") 'windmove-left
@@ -1088,13 +1087,13 @@ defined together with those functions.
   (kbd "C-l") 'windmove-up
   (kbd "C-ø") 'windmove-right)
 
-(defun my-win-change-minibuffer-hook ()
-  (my-win-change-minor-mode 0))
+(define-global-minor-mode my-global-win-change-mode my-win-change-minor-mode
+  (lambda ()
+    (when (not (memq major-mode
+                     (list 'minibuffer)))
+      (my-win-change-minor-mode 1))))
 
-;(add-hook 'minibuffer-setup-hook 'my-win-change-minibuffer-hook)
-
-;(my-win-change-minor-mode 1)
-(add-hook 'text-mode-hook #'my-win-change-minor-mode)
+(my-global-win-change-mode 1)
 #+END_SRC
 
 ** Cycle buffers
