@@ -24,51 +24,6 @@ Hide the toolbar, menubar and scrollbar.
 (load-theme 'wombat)
 #+END_SRC
 
-** Set default font
-#+BEGIN_SRC emacs-lisp
-; Source: https://coderwall.com/p/ifgyag/change-font-size-in-emacs-dynamically-based-on-screen-resolution
-(setq default-font "DejaVu Sans Mono-%d")
-(setq font-size-low-res 10)
-(setq font-size-high-res 10)
-
-(defun frame-is-high-res ()
-  (> (display-pixel-width) 10000))
-
-(defun fontify-frame (&optional frame)
-  (interactive)
-  (if window-system
-      (let ((font (format
-		   default-font
-		   (if (frame-is-high-res)
-		       font-size-high-res
-		     font-size-low-res))))
-
-	(set-frame-parameter frame 'font font))))
-
-(defun frame-increase-font-size (&optional frame)
-  (interactive)
-  (progn
-    (if (frame-is-high-res)
-	(incf font-size-high-res)
-      (incf font-size-low-res))
-    (fontify-frame frame)))
-
-(defun frame-decrease-font-size (&optional frame)
-  (interactive)
-  (progn
-    (if (frame-is-high-res)
-	(decf font-size-high-res)
-      (decf font-size-low-res))
-    (fontify-frame frame)))
-
-(fontify-frame nil)
-
-(global-set-key (kbd "C-M-j") 'frame-decrease-font-size)
-(global-set-key (kbd "C-M-ø") 'frame-increase-font-size)
-
-(push 'fontify-frame after-make-frame-functions)
-#+END_SRC
-
 * Package management
 ** Package.el
 #+BEGIN_SRC emacs-lisp
@@ -118,6 +73,58 @@ Automatically download required packages.
 (use-package powerline
   :config
   (powerline-center-evil-theme))
+#+END_SRC
+
+** Font
+*** Fira code
+#+BEGIN_SRC emacs-lisp
+(use-package fira-code-mode
+  :hook prog-mode)
+#+END_SRC
+
+*** Increase and decrease font size
+#+BEGIN_SRC emacs-lisp
+; Source: https://coderwall.com/p/ifgyag/change-font-size-in-emacs-dynamically-based-on-screen-resolution
+(setq default-font "Fira code-%d")
+(setq font-size-low-res 10)
+(setq font-size-high-res 10)
+
+(defun frame-is-high-res ()
+  (> (display-pixel-width) 10000))
+
+(defun fontify-frame (&optional frame)
+  (interactive)
+  (if window-system
+      (let ((font (format
+		   default-font
+		   (if (frame-is-high-res)
+		       font-size-high-res
+		     font-size-low-res))))
+
+	(set-frame-parameter frame 'font font))))
+
+(defun frame-increase-font-size (&optional frame)
+  (interactive)
+  (progn
+    (if (frame-is-high-res)
+	(cl-incf font-size-high-res)
+      (cl-incf font-size-low-res))
+    (fontify-frame frame)))
+
+(defun frame-decrease-font-size (&optional frame)
+  (interactive)
+  (progn
+    (if (frame-is-high-res)
+	(cl-decf font-size-high-res)
+      (cl-decf font-size-low-res))
+    (fontify-frame frame)))
+
+(fontify-frame nil)
+
+(global-set-key (kbd "C-M-j") 'frame-decrease-font-size)
+(global-set-key (kbd "C-M-ø") 'frame-increase-font-size)
+
+(push 'fontify-frame after-make-frame-functions)
 #+END_SRC
 
 * Alarm bell
