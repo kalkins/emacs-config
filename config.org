@@ -597,9 +597,9 @@ Collapses code blocks.
          ("RET" . (lambda () (interactive) (org-return t)))
          ("C-c l" . org-store-link))
   :config
-  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle))
-  ;(unbind-key "C-j" org-mode-map)
-  ;(unbind-key "C-k" org-mode-map))
+  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines)))
 #+END_SRC
 
 ** Bullets
