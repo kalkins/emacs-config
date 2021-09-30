@@ -164,6 +164,18 @@ This package adds vim-like navigation to emacs.
   (evil-mode 1))
 #+END_SRC
 
+** Undo
+I like undo tree, and prefer finer control.
+
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode)
+  (add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
+  (evil-set-undo-system 'undo-tree)
+  (setq evil-want-fine-undo t))
+#+END_SRC
+
 ** Keybinding
 I prefer to use jklø for navigation instead of hjkl.
 
@@ -187,13 +199,6 @@ I like to insert blank newlines with RET in normal mode.
 						(beginning-of-line)
 						(newline)
 						(previous-line)))
-#+END_SRC
-
-Don't remap undo buttons in visual mode.
-
-#+BEGIN_SRC emacs-lisp
-(define-key evil-visual-state-map (kbd "u") 'undo-tree-undo)
-(define-key evil-visual-state-map (kbd "C-r") 'undo-tree-redo)
 #+END_SRC
 
 Disable some keys, so they can be used for other stuff later.
