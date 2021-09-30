@@ -629,7 +629,6 @@ marking them with the :ignore: tag.
 
 ** Grammar check
 #+BEGIN_SRC emacs-lisp
-(require 'langtool)
 (use-package langtool
   :init
   (setq langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*"))
