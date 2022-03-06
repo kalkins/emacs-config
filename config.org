@@ -78,8 +78,8 @@ Automatically download required packages.
 ** Font
 *** Fira code
 #+BEGIN_SRC emacs-lisp
-(use-package fira-code-mode
-  :hook prog-mode)
+;(use-package fira-code-mode
+;  :hook prog-mode)
 #+END_SRC
 
 *** Increase and decrease font size
