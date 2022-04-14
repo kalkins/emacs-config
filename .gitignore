@@ -1,4 +1,8 @@
 *~
 \#*\#
+elpa
+transient
+projectile-bookmarks.eld
 config.el
 local_packages.el
+.last-package-update-day
