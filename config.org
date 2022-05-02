@@ -559,6 +559,11 @@ Configure bibtex mode to use biblatex.
 (use-package yaml-mode)
 #+END_SRC
 
+** Docker
+#+BEGIN_SRC emacs-lisp
+(use-package dockerfile-mode)
+#+END_SRC
+
 * HideShow
 Collapses code blocks.
 
