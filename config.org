@@ -10,6 +10,16 @@ the source of which can be found [[http://github.com/kalkins/emacs-config][here]
 and all code blocks are executed at launch.
 
 * Startup
+** Custom file
+Emacs uses the custom file to store changed customization variables. This defaults to
+init.el, which messes with version control, and makes it harder to read. Instead, use
+a separate file which is ignored by git.
+
+#+BEGIN_SRC emacs-lisp
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file 'noerror 'nomessage)
+#+END_SRC
+
 ** Toolbars and scollbar
 Hide the toolbar, menubar and scrollbar.
 
