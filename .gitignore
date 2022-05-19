@@ -7,3 +7,4 @@ config.el
 custom-vars.el
 local_packages.el
 .last-package-update-day
+forge-database.sqlite
