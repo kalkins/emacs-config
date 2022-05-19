@@ -297,6 +297,19 @@ Use PDF tools instead of the default DocView.
   (magit-todos-mode))
 #+END_SRC
 
+** Forge
+Forge is a magit extension to work with Github, Gitlab etc.
+
+#+BEGIN_SRC emacs-lisp
+(use-package forge
+  :after magit
+  :config
+  (setq auth-sources '(default
+                        "Default keyring"
+                        "secrets:session"
+                        "secrets:Login")))
+#+END_SRC
+
 * Projectile
 I use projectile for switching between and navigating projects
 
