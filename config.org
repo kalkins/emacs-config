@@ -973,6 +973,16 @@ Org export extensions.
 (use-package htmlize)
 #+END_SRC
 
+* Tramp
+Tramp allows editing files remotely over ssh.
+
+#+BEGIN_SRC emacs-lisp
+(setq tramp-default-method "sshx")
+
+(customize-set-variable 'tramp-syntax 'simplified)
+(customize-set-variable 'tramp-use-ssh-controlmaster-options nil)
+#+END_SRC
+
 * Minor packages
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
