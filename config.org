@@ -427,6 +427,10 @@ so they don't clutter up my projects.
 #+END_SRC
 
 * Programming languages
+** Language server
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode)
+#+END_SRC
 ** Web development
 *** HTML
 **** Indentation
@@ -521,7 +525,7 @@ Set HTML indentation to 4 spaces by default.
 ** Rust
 
 #+BEGIN_SRC emacs-lisp
-(use-package rust-mode)
+(use-package rustic)
 
 (use-package flycheck-rust
   :config
