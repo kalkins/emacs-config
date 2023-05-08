@@ -151,6 +151,11 @@ a visible cue.
 			       orig-fg))))
 #+END_SRC
 
+* Basic packages
+** SQLite
+#+BEGIN_SRC emacs-lisp
+(use-package sqlite3)
+#+END_SRC
 * Search
 ** Helm
 #+BEGIN_SRC emacs-lisp
