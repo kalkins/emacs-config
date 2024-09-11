@@ -248,7 +248,7 @@ The evil collection adds bindings for several modes not covered by evil.
   :after evil
   :config
   (add-hook 'evil-collection-setup-hook #'jklø-evil-collection)
-  (evil-collection-init))
+  (evil-collection-init '(magit)))
 #+END_SRC
 
 * PDF tools
