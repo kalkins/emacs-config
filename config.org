@@ -357,28 +357,20 @@ relative numbers. If I hit 'æ' again it turns
 all line numbers off.
 
 #+BEGIN_SRC emacs-lisp
-(use-package linum-relative
-  :config
-  (setq linum-relative-mode nil)
-  (define-key evil-normal-state-map (kbd "h") (lambda ()
-						(interactive)
-						(if (and linum-mode (not linum-relative-mode))
-						    (linum-mode -1)
-						  (progn
-						    (linum-relative-off)
-						    (linum-mode 1)
-						    (setq linum-relative-mode nil)))))
-  (define-key evil-normal-state-map (kbd "æ") (lambda ()
-						(interactive)
-						(if (and linum-mode linum-relative-mode)
-						    (progn
-						      (linum-relative-off)
-						      (linum-mode -1)
-						      (setq linum-relative-mode nil))
-						  (progn
-						    (linum-mode 1)
-						    (linum-relative-on)
-						    (setq linum-relative-mode t))))))
+(setq display-line-numbers-type nil)
+(global-display-line-numbers-mode)
+
+(define-key evil-normal-state-map (kbd "h") (lambda ()
+                                              (interactive)
+                                              (if (eq display-line-numbers t)
+                                                  (setq display-line-numbers nil)
+                                                (setq display-line-numbers t))))
+
+(define-key evil-normal-state-map (kbd "æ") (lambda ()
+                                              (interactive)
+                                              (if (eq display-line-numbers 'relative)
+                                                  (setq display-line-numbers nil)
+                                                (setq display-line-numbers 'relative))))
 #+END_SRC
 
 * Autosaves and backups
