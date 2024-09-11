@@ -157,6 +157,13 @@ a visible cue.
 (use-package sqlite3)
 #+END_SRC
 * Search
+** Dired
+Extra packages to extend dired. Some are necessary for other plugins, but not installed as dependencies.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-filter)
+#+END_SRC
+
 ** Helm
 #+BEGIN_SRC emacs-lisp
 (use-package helm
