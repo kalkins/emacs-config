@@ -8,6 +8,6 @@ custom-vars.el
 local_packages.el
 .last-package-update-day
 projects
-forge-database.sqlite
+forge-database*.sqlite
 forge-database*.sql
 tramp
